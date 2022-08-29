@@ -1,0 +1,51 @@
+body{background-color:rgb(4, 4, 5); text-align: center;}
+table.chessboard {
+    margin: 60px; 
+    background:#9f90b0;
+    border: 10px solid rgb(48, 1, 53);
+    border-collapse: collapse; /* */
+ 
+}
+button {
+    margin-top:25px;
+   border: 2px;
+    background-color: #d7c1f0;
+    border-radius: 20px;
+    font-weight: 700;
+    box-shadow: 2px 2px #7a368f;
+}
+h1 {
+    font-size: 25px;
+    font-weight: 800;
+    color: rgb(3, 139, 14);
+    text-align: center;
+}
+img {
+    width: 95%;
+    height: 95%;
+    
+}
+td.chessboard {
+    padding: 0;
+text-align: center;
+width: 90px; height: 90px;
+border: 0px solid #333; /* */
+}
+tr.chessboard:nth-child(odd)   td.chessboard:nth-child(even) 
+,
+tr.chessboard:nth-child(even)  td.chessboard:nth-child(odd)  {
+    background: #7a368f;
+}
+
+
+
+tr.chessboard:nth-child(odd)   td.chessboard:nth-child(even):hover{
+    background-color:rgb(255, 0, 200);
+   
+}
+tr.chessboard:nth-child(even)  td.chessboard:nth-child(odd):hover{
+    background-color:rgb(255, 0, 200);}
+td.chessboard:hover{
+    background-color:rgb(255, 0, 200);
+}
+
