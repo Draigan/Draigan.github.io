@@ -151,7 +151,7 @@ let b3Square = new Square(2,1,'','');
 let b4Square = new Square(3,1,'','');
 let b5Square = new Square(4,1,'','');
 let b6Square = new Square(5,1,'','');
-let b7Square = new Square(6,1,'','');
+let b7Square = new Square(6,1,'pawn','black');
 let b8Square = new Square(7,1,'knight','black');
 
 let c1Square = new Square(0,2,'bishop','white');
@@ -165,22 +165,22 @@ let c8Square = new Square(7,2,'bishop','black');
 
 
 let d1Square = new Square(0,3,'queen','white');
-let d2Square = new Square(1,3,'queen','white');
+let d2Square = new Square(1,3,'pawn','white');
 let d3Square = new Square(2,3,'','');
 let d4Square = new Square(3,3,'','');
 let d5Square = new Square(4,3,'','');
 let d6Square = new Square(5,3,'','');
-let d7Square = new Square(6,3,'','');
+let d7Square = new Square(6,3,'pawn','black');
 let d8Square = new Square(7,3,'queen','black');
 
 
 let e1Square = new Square(0,4,'king','white');
-let e2Square = new Square(1,4,'','');
+let e2Square = new Square(1,4,'pawn','white');
 let e3Square = new Square(2,4,'','');
 let e4Square = new Square(3,4,'','');
 let e5Square = new Square(4,4,'','');
 let e6Square = new Square(5,4,'','');
-let e7Square = new Square(6,4,'','');
+let e7Square = new Square(6,4,'pawn','black');
 let e8Square = new Square(7,4,'king','black');
 
 let f1Square = new Square(0,5,'bishop','white');
