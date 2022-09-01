@@ -18,7 +18,6 @@ var bKingInCheck = false;
 var squareName;
 let checkMate = false;
 
-
 //
 //  Query Selectors for squares and an array for the divs
 //  
@@ -152,7 +151,7 @@ let b3Square = new Square(2,1,'','');
 let b4Square = new Square(3,1,'','');
 let b5Square = new Square(4,1,'','');
 let b6Square = new Square(5,1,'','');
-let b7Square = new Square(6,1,'','');
+let b7Square = new Square(6,1,'pawn','black');
 let b8Square = new Square(7,1,'knight','black');
 
 let c1Square = new Square(0,2,'bishop','white');
@@ -166,22 +165,22 @@ let c8Square = new Square(7,2,'bishop','black');
 
 
 let d1Square = new Square(0,3,'queen','white');
-let d2Square = new Square(1,3,'queen','white');
+let d2Square = new Square(1,3,'pawn','white');
 let d3Square = new Square(2,3,'','');
 let d4Square = new Square(3,3,'','');
 let d5Square = new Square(4,3,'','');
 let d6Square = new Square(5,3,'','');
-let d7Square = new Square(6,3,'queen','black');
+let d7Square = new Square(6,3,'pawn','black');
 let d8Square = new Square(7,3,'queen','black');
 
 
 let e1Square = new Square(0,4,'king','white');
-let e2Square = new Square(1,4,'','');
+let e2Square = new Square(1,4,'pawn','white');
 let e3Square = new Square(2,4,'','');
 let e4Square = new Square(3,4,'','');
 let e5Square = new Square(4,4,'','');
 let e6Square = new Square(5,4,'','');
-let e7Square = new Square(6,4,'','');
+let e7Square = new Square(6,4,'pawn','black');
 let e8Square = new Square(7,4,'king','black');
 
 let f1Square = new Square(0,5,'bishop','white');
@@ -211,9 +210,6 @@ let h5Square = new Square(4,7,'','');
 let h6Square = new Square(5,7,'','');
 let h7Square = new Square(6,7,'pawn','black');
 let h8Square = new Square(7,7,'rook','black');
-
-const benPassantArray = [a3Square, b3Square, c3Square, d3Square, e3Square, f3Square, g3Square, h3Square];
-const wenPassantArray = [a6Square, b6Square, c6Square, d6Square, e6Square, f6Square, g6Square, h6Square];
 
 function
 findBlackKing(){
@@ -486,8 +482,8 @@ checkSquaresAroundKing(){
  let brow = findBlackKing().row;
  let bcol = findBlackKing().col;
 
- let row = findWhiteKing().row;
- let col = findWhiteKing().col;
+ let wrow = findWhiteKing().row;
+ let wcol = findWhiteKing().col;
 
       if ('black' == currentTurnColor){
 
@@ -514,31 +510,6 @@ checkSquaresAroundKing(){
        if (findSquare(brow +1 ,bcol - 1) != undefined &&  findSquare(brow +1 ,bcol - 1).whiteCount == 0 && findSquare(brow +1 ,bcol - 1).pieceColor == 'white' ) {console.log ('16');return true}
     }
 
-
-    if ('white' == currentTurnColor){
-
-        if (0 == findWhiteKing().blackCount){return true;}
-
-       //free squares
-       if (findSquare(row +1 ,col) != undefined && findSquare(row +1 ,col).blackCount == 0 && findSquare(row +1 ,col).pieceColor == '' ) {console.log ('1');return true}
-       if (findSquare(row +1 ,col + 1) != undefined && findSquare(row +1 ,col + 1).blackCount == 0 && findSquare(row +1 ,col + 1).pieceColor == '' ) {console.log ('2'); return true}
-       if (findSquare(row ,col + 1) != undefined && findSquare(row  ,col + 1).blackCount == 0 && findSquare(row  ,col + 1).pieceColor == '' ) {console.log ('3');return true}
-       if (findSquare(row -1 ,col + 1) != undefined && findSquare(row-1  ,col + 1).blackCount == 0 && findSquare(row-1  ,col + 1).pieceColor == '' ) {console.log ('8');return true}
-       if (findSquare(row -1 ,col) != undefined && findSquare(row -1 ,col).blackCount == 0 && findSquare(row -1 ,col).pieceColor == '' ) {console.log ('4');return true}
-       if (findSquare(row -1 ,col -1) != undefined && findSquare(row -1 ,col-1).blackCount == 0 && findSquare(row -1 ,col-1).pieceColor == '' ) {console.log ('5');return true}
-       if (findSquare(row  ,col -1) != undefined && findSquare(row  ,col-1).blackCount == 0 && findSquare(row  ,col-1).pieceColor == '' ) {console.log ('6');return true}
-       if (findSquare(row +1 ,col - 1) != undefined && findSquare(row +1 ,col - 1).blackCount == 0 && findSquare(row +1 ,col - 1).pieceColor == '' ) {console.log ('17');return true}
-
-//squares with a black piece in it.
-       if (findSquare(row +1 ,col) != undefined &&  findSquare(row +1 ,col).blackCount == 0 && findSquare(row +1 ,col).pieceColor == 'black' ) {console.log ('9');return true}
-       if (findSquare(row +1 ,col + 1) != undefined && findSquare(row +1 ,col + 1).blackCount == 0 && findSquare(row +1 ,col + 1).pieceColor == 'black' ) {console.log ('10');return true}
-       if (findSquare(row ,col + 1) != undefined && findSquare(row  ,col + 1).blackCount == 0 && findSquare(row  ,col + 1).pieceColor == 'black'  ) {console.log ('11');return true}
-       if (findSquare(row -1 ,col + 1) != undefined &&  findSquare(row-1  ,col + 1).blackCount == 0 && findSquare(row-1  ,col + 1).pieceColor == 'black')  {console.log ('12');return true}
-       if (findSquare(row -1 ,col) != undefined && findSquare(row -1 ,col).blackCount == 0 && findSquare(row -1 ,col).pieceColor == 'black' ) {console.log ('13');return true}
-       if (findSquare(row -1 ,col -1) != undefined &&  findSquare(row -1 ,col-1).blackCount == 0 && findSquare(row -1 ,col-1).pieceColor == 'black' ) {console.log ('14');return true}
-       if ( findSquare(row  ,col -1) != undefined && findSquare(row  ,col-1).blackCount == 0 && findSquare(row  ,col-1).pieceColor == 'black' ) {console.log ('15');return true}
-       if (findSquare(row +1 ,col - 1) != undefined &&  findSquare(row +1 ,col - 1).blackCount == 0 && findSquare(row +1 ,col - 1).pieceColor == 'black' ) {console.log ('16');return true}
-    }
 
 
     
@@ -663,8 +634,7 @@ if (false == checkMate) {return}
     countChecker();
 
     //CheckMate is assumed true unless this is tripped. This simply means that we found a way out of checkmate. 
-    if (0 == findBlackKing().whiteCount && currentTurnColor == 'black'){checkMate = false;}
-    if (0 == findWhiteKing().blackCount && currentTurnColor == 'white'){checkMate = false;}
+    if (0 == findBlackKing().whiteCount){checkMate = false;}
     altSnapshot();
     return
    
@@ -690,9 +660,7 @@ if (false == checkMate) {return}
     countChecker();
 
     //CheckMate is assumed true unless this is tripped. This simply means that we found a way out of checkmate. 
-    if (0 == findBlackKing().whiteCount && currentTurnColor == 'black'){checkMate = false;}
-    if (0 == findWhiteKing().blackCount && currentTurnColor == 'white'){checkMate = false;}
-    
+    if (0 == findBlackKing().whiteCount){checkMate = false;}
     altSnapshot();
 
 
@@ -1076,8 +1044,7 @@ bEnPassantLeftMove(row,col){
         aboveOrBelowInitalSquare.pieceColor = '';
         deparetureSquare.pieceType = '';
         deparetureSquare.pieceColor = '';
-        leftTradeSquare = ''; 
-
+     
    
  
 
@@ -1097,8 +1064,7 @@ bEnPassantRightMove(row,col){
         aboveOrBelowInitalSquare.pieceColor = '';
         deparetureSquare.pieceType = '';
         deparetureSquare.pieceColor = '';
-        rightTradeSquare = ''; 
-
+     
 
 
 }
@@ -1157,7 +1123,7 @@ wEnPassantRightMove(row,col){
         aboveOrBelowInitalSquare.pieceColor = '';
         deparetureSquare.pieceType = '';
         deparetureSquare.pieceColor = '';
-        rightTradeSquare = ''; 
+     
 
 
 }
@@ -1175,7 +1141,7 @@ wEnPassantLeftMove(row,col){
         aboveOrBelowInitalSquare.pieceColor = '';
         deparetureSquare.pieceType = '';
         deparetureSquare.pieceColor = '';
-        leftTradeSquare = ''; 
+     
    
 
 }
@@ -1440,6 +1406,9 @@ changeTurn()
 }
 
 
+
+//          The Event Listeners
+
 for (let index = 0; index < divArray.length; index ++){
 
     //      Create and event listener that runs a function with the paremeter telling the function what square to work on.
@@ -1449,11 +1418,6 @@ for (let index = 0; index < divArray.length; index ++){
 function
 mainEventFunction(currentSquare){
 
-    if (rightTradeSquare == currentSquare && currentTurnColor == 'black'){  bEnPassantRightMove(currentSquare.row,currentSquare.col); ; changeTurn();  return}
-    if (leftTradeSquare == currentSquare && currentTurnColor == 'black'){  bEnPassantLeftMove(currentSquare.row,currentSquare.col); changeTurn();  return}
-
-    if (rightTradeSquare == currentSquare && currentTurnColor == 'white'){  wEnPassantRightMove(currentSquare.row,currentSquare.col);  changeTurn();  return}
-    if (leftTradeSquare == currentSquare && currentTurnColor == 'white'){  wEnPassantLeftMove(currentSquare.row,currentSquare.col);  changeTurn();  return}
 
     if (true == possibilityState && false == currentSquare.possible && false == currentSquare.encounter) {
         clickingNonPossibleSquare()
@@ -1564,22 +1528,20 @@ g1Div.addEventListener('click', () => {
 
         c8Div.addEventListener('click', () => {
 
-            if (currentObject == e8Square && currentObject == c8Square && false == wKingMoved && false == a8RookMoved && b8Square.pieceType == '' && c8Square.pieceType == ''
-                && 0 == c8Square.blackCount && 0 == e8Square.blackCount && 0 == d8Square.blackCount && d8Square.pieceType == '') {
-                a1Square.pieceType = '';
-                b1Square.pieceType = '';
-                a1Square.pieceColor = '';
-                b1Square.pieceColor = '';
+            if (currentObject == e8Square  && false == bKingMoved && false == a8RookMoved && b8Square.pieceType == '' && c8Square.pieceType == ''
+                && 0 == c8Square.whiteCount && 0 == e8Square.whiteCount && 0 == d8Square.whiteCount && d8Square.pieceType == '') {
+                a8Square.pieceType = '';
+                b8Square.pieceType = '';
+                a8Square.pieceColor = '';
+                b8Square.pieceColor = '';
         
-               d1Square.pieceType = 'rook';
-                d1Square.pieceColor = 'white';
-                c1Square.pieceType = 'king';
-                c1Square.pieceColor = 'white'
+               d8Square.pieceType = 'rook';
+                d8Square.pieceColor = 'black';
+                c8Square.pieceType = 'king';
+                c8Square.pieceColor = 'black'
         
-                changeTurn()
+                changeTurn();
         
                 return
             }})
         
-
-            
