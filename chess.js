@@ -1544,10 +1544,13 @@ g1Div.addEventListener('click', () => {
             if (currentObject == e1Square && false == wKingMoved && false == a1RookMoved && b1Square.pieceType == '' && c1Square.pieceType == ''
                 && 0 == c1Square.blackCount && 0 == e1Square.blackCount && 0 == d1Square.blackCount && d1Square.pieceType == '') {
                 a1Square.pieceType = '';
-                b1Square.pieceType = '';
+  
                 a1Square.pieceColor = '';
-                b1Square.pieceColor = '';
-        
+           
+                e1Square.pieceColor = '';
+                e1Square.pieceType = '';
+
+
                d1Square.pieceType = 'rook';
                 d1Square.pieceColor = 'white';
                 c1Square.pieceType = 'king';
