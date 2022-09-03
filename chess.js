@@ -1,3 +1,41 @@
+// FEEDBACK
+// OVERALL FEEDBACK
+//
+// Really good job on this. From what your reddit post said you'd only been programming for a few weeks when
+// you started this? I think you're already showing a good grasp of the concepts that you're using here, like
+// if statements, loops, variables, etc. 
+
+// With that said, I do have a lot of feedback. I've been about as 'harsh' on you as I would on any of the juniors
+// on my team at work. 'Harsh' in terms of me being pedantic about what sorts of things to raise feedback on, hopefully
+// the content & tone of my feedback doesn't come across as harsh!
+
+// Biggest thing overall-wise is the formatting. Lots of non-standard formatting imo (like the 'function' part of a 
+// function defition being on a separate line) and a bit wacky indentation and spacing. Would highly recommend some
+// kind of automatic formatter that can format the document on save, so make sure your formatting is consistent.
+
+// Another thing that is probably more of a nice-to-have is that you have a lot of the same strings defined right in
+// the code. If for whatever reason you need to change one, you then have to change it everywhere. Or if you make a
+// typo when typing one out, now there is a bug in the code. One possible improvment here is to store the strings in
+// an object & reference the object instead of the string directly. For example
+
+// const Colors = {
+//   white: 'white',
+//   black: 'black'
+// }
+
+// const Pieces = {
+//  rook: 'rook',
+//  knight: 'knight',
+//  bishop: 'bishop'
+//  etc...
+// }
+
+// Then you can refernces those string in your code like Colors.white or Pieces.knight, and you don't have to worry about
+// changing it everywhere if something needs to change, or making a typo etc.
+
+// The rest of my feedback is on specific sections of the code, so continue scrolling to see. Each piece of feedback starts
+// with FEEDBACK (just like this section) to make searching for the feedback a bit easier.
+
 //v
 //  My global variables
 //
@@ -7,6 +45,15 @@ var currentObject;
 
 var pieceSet = 'anarcandy';
 var lastObject = [];    
+// FEEDBACK:
+// I feel like the variables below could be all stored in a single object instead of as separate variables.
+// Something like:
+// var hasMoved = {
+//   whiteKing: false,
+//   blackKing: false,
+//   h1Rook: false,
+//   etc...
+// }
 var wKingMoved = false;
 var bKingMoved = false;
 var h1RookMoved = false;
@@ -22,6 +69,27 @@ let checkMate = false;
 //
 //  Query Selectors for squares and an array for the divs
 //  
+
+// FEEDBACK:
+// there is a lot of repeated code here (64 lines of the same thing I guess)
+// perhaps there is a more consise way to do this using a single .querySelectorAll() call,
+// though I think that would require changes to the html.
+// You could also do these query selectors in a more 'dynamic' way, rather than hard coding every square,
+// while also building the div array at the same time.
+//
+// const divArray = [];
+// ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].forEach(letter => {
+//    [1, 2, 3, 4, 5, 6, 7, 8].forEach(number => {
+//          divArray.push(document.querySelector(`.${letter}${number}-Square`));
+//    })
+// }
+//})
+//
+// This snippet loops over the letters a through h, then the numbers 1 through 8 for each of the letters,
+// and dynamically builds the string to use for the query selector using what is called a template literal
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
+//
+
 const a1Div = document.querySelector('.a1-Square');
 const a2Div = document.querySelector('.a2-Square');
 const a3Div = document.querySelector('.a3-Square');
@@ -216,7 +284,15 @@ const wenPassantArray = [a6Square, b6Square, c6Square, d6Square, e6Square, f6Squ
 
 function
 findBlackKing(){
-
+  // FEEDBACK:
+  // This applies to all of your 'find' functions. Javascript actually has a built in find method for arrays.
+  // So this whole function could instead just be:
+  //
+  // function findBlackKing() {
+  //     return squaresArray.find(square => square.pieceType == 'king' && squares.pieceColor == 'black');
+  // }
+  // 
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find
     for (let i = 0; i < squaresArray.length; i ++){
 if (squaresArray[i].pieceType == 'king' && squaresArray[i].pieceColor == 'black') { return squaresArray[i]}
     }
@@ -224,7 +300,15 @@ if (squaresArray[i].pieceType == 'king' && squaresArray[i].pieceColor == 'black'
 
 function
 findWhiteKing(){
- 
+  // FEEDBACK: same feedback as for flintBlackKing.
+  // in fact, you could reduce the code duplication by merging them into a single function, and passing the color
+  // you're looking for as an argument.
+  //
+  // function findKing(color) {
+  //     return squaresArray.find(square => square.pieceType == 'king' && squares.pieceColor == color);
+  // }
+  //
+  // Then you could just call it with findKing('white') or findKing('black')
     for (let i = 0; i < squaresArray.length; i ++){
 if (squaresArray[i].pieceType == 'king' && squaresArray[i].pieceColor == 'white') { return squaresArray[i]}
     }
@@ -254,7 +338,25 @@ updateRealWithPastBoard(){
 //
 function
 findSquare(rowinput, colinput){
-
+// FEEDBACK:
+// same as the other find related functions, you could use javascript's built in find() method
+//
+// function findSquare(rowinput, colinput) {
+//     return squaresArray.find(square => square.row == rowinput && square.col == colinput);
+// }
+//
+// You could also think about storing the squares in a 2 dimentional array that represents the actual rows and columns.
+// For example each row would be an individual array, and they would all be in one larger array of the whole board.
+//
+// [
+//   [row1col1, row1col2, row1col3, etc...],
+//   [row2col1, row2col2, row2col3, etc...],
+//   [row3col1, row3col2, row3col3, etc...],
+//   etc...
+// ]
+// (please note the names of the items in the array are just examples to try and indicate/explain how the data is stored)
+// Then you could look up the square you need in a single (technically two) operation, instead of having to loop over every square searching for it.
+// squaresArray[row][column]
 for (let i = 0; i < squaresArray.length; i++){
     if (squaresArray[i].row == rowinput && squaresArray[i].col == colinput){
        
@@ -275,8 +377,11 @@ resetCount(){
 
 function
 checkChecker(){
-
+// FEEDBACK
+// the name of this function is a little confusing. Perhaps a comment on the function could help explain to someone reading the code
     for  (let i = 0; i < squaresArray.length; i ++){
+      // FEEDBACK: are you using yoda style statements on purpose? if so, that's cool. I don't use them myself personally because I
+      // find it doesn't 'roll off the tongue' as nicely when I read it in my head
          if ('king' == squaresArray[i].pieceType && 'white' == squaresArray[i].pieceColor && 0 != squaresArray[i].blackCount ){
                 divArray[i].style.backgroundImage = "url('./assets/red2.jpg')"
                
@@ -284,6 +389,24 @@ checkChecker(){
         }
     }
 
+    // FEEDBACK:
+    // looks like you're looping through the whole array twice, the first time checking for a white king, then the second time 
+    // checking for a black king. Then you're doing the exact same thing inside both if statements! You could combine them into
+    // a single loop
+    // 
+    // for (let i = 0; i < squaresArray.length; i ++){
+    //   if ('king' == squaresArray[i].pieceType){
+    //     const blackKingWithNoLineOfSite = 'black' == squaresArray[i].pieceColor && 0 != squaresArray[i].whiteCount;
+    //     const whiteKingWithNoLineOfSite = 'white' == squaresArray[i].pieceColor && 0 != squaresArray[i].blackCount;
+    //     if(blackKingWithNoLineOfSite || whiteKingWithNoLineOfSite) {
+    //       divArray[i].style.backgroundImage = "url('./assets/red2.jpg')"
+    //       return mateChecker();
+    //     }
+    //   }
+    // }
+    //
+    // This way we are not looping through the array twice just to do the exact same thing. I've pulled the if statement
+    // apart a little bit because I think it makes it easier to read
     for (let i = 0; i < squaresArray.length; i ++){
             if ('king' == squaresArray[i].pieceType && 'black' == squaresArray[i].pieceColor && 0 != squaresArray[i].whiteCount ){
                 divArray[i].style.backgroundImage = "url('./assets/red2.jpg')"
@@ -316,10 +439,32 @@ CheckForPin(){
     altSnapshot();
     countChecker();
  
+    // FEEDBACK
+    // don't put the content of the if statement on one line especially when it's actually multiple lines. 
+    // These should be spread out more
+    // if (currentTurnColor == 'black' && blackKingSquare.whiteCount > 0){
+    //   updateRealWithPastBoard(); 
+    //   resetCount(); 
+    //   return false 
+    // }
+    // 
+    // Also this is another case where you are having two if statements do the same thing. So you could consolidate them
+    // into one statement using an OR (||)
     if (currentTurnColor == 'black' && blackKingSquare.whiteCount > 0){  updateRealWithPastBoard(); resetCount(); return false }
     if (currentTurnColor == 'white' && whiteKingSquare.blackCount > 0){  updateRealWithPastBoard(); resetCount(); return false }
+
+    // You also have inside the if statements returning false, but no return true outside the if statements. This might be
+    // confusing because the function will sometimes return a boolean and sometimes return undefined
 }
 
+// FEEDBACK
+// you could simplify this a little bit by using a ternary statement
+//
+// function turnColorSwitcher() {
+//     currentTurnColor = currentTurnColor == 'white' ? 'black': 'white';
+// }
+//
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
 function
 turnColorSwitcher(){    if (currentTurnColor == 'white'){ currentTurnColor = 'black'; }
 else{ currentTurnColor = 'white'; }}
@@ -328,6 +473,9 @@ else{ currentTurnColor = 'white'; }}
 function
 changeTurn(){
  
+  // FEEDBACK
+  // not sure if you've done this knowingly but this sort of style of if statement is know as a guard clause
+  // or 'return early' and is a great way to help with readability and keep code clean
    if (false == CheckForPin()) {return }
 
    turnColorSwitcher();
@@ -337,6 +485,10 @@ changeTurn(){
 
     altSnapshot();
     mapImages();
+    // FEEDBACK
+    // you're using last object like some sort of stack or queue (pushing and popping into it), but I think you never push
+    // more than 1 thing into it at a time? this is the only place you call .push on it, and it's right after you call .pop,
+    // so is there any point actually having it as an array? why not just do lastObject = currentObject?
     lastObject.pop();
     lastObject.push(currentObject);
     resetCount();
@@ -359,6 +511,13 @@ resetPossibleAndEncounter() {
 function
 visualizePossibilities(){
         for (let i = 0; i < squaresArray.length; i ++){
+        // FEEDBACK
+        // you can skip the == true here, just if(squaresArray[i].encounter is enough)
+        // Also you set the background image of the div to red2.jpg a number of times, maybe you should consider
+        // moving that into a function so it's reusable?
+        // Also also, if the file name or path changes for whatever reason, now you have many places in your code that
+        // also need to be changed.  Using a function can help with this, or you could instead use a css class to set 
+        // the background, and use javascript to just turn that class on or off
         if (squaresArray[i].encounter == true) {divArray[i].style.backgroundImage = "url('./assets/red2.jpg')";}
             else if (squaresArray[i].possible == true) {divArray[i].style.backgroundImage = "url('./assets/index.png')";}  
         }
@@ -367,6 +526,9 @@ visualizePossibilities(){
 function
 unvisualizePossibilities(){
     for (let i = 0; i < squaresArray.length; i ++){
+    // FEEDBACK
+    // you can skip the == false here by using the not operator (!)
+    // if (!squaresArray[i].encounter) { is enough
     if (squaresArray[i].encounter == false) {divArray[i].style.backgroundImage = "";}
         else if (squaresArray[i].possible == false) {divArray[i].style.backgroundImage = ''}
         }
@@ -377,6 +539,46 @@ unvisualizePossibilities(){
 //
 function
 mapImages(){
+
+  FEEDBACK
+  // This is another case where thinking more dynamically can reduce the amount of code duplication here.
+  // The inside of each if statement is pretty much exactly the same, with a few changes in the string.
+  // We can again generate that string dynamically to reduce the number of if statements.
+  //
+  // We can use a js object to map between the peiceSet string and the folder name,then can do something
+  // similar for the pieces & colors.
+  //
+  // function mapImages(){
+  //   var folderMap = {
+  //     'basic': 'assets',
+  //     'anarcandy': 'assets2'
+  //   }
+  //   var folder = folderMap[pieceSet];
+
+  //   var pieceMap = {
+  //     'rook': 'R',
+  //     'knight': 'N',
+  //     'bishop': 'B',
+  //     'queen': 'Q',
+  //     'king': 'K',
+  //     'pawn': 'P'
+  //   }
+  //   for (let i = 0; i < squaresArray.length; i ++){
+  //     const square = squaresArray[i];
+  //     if(square.pieceType == ''){
+  //       divArray[i].innerHTML = '';
+  //       continue;
+  //     }
+  //     const piece = `${square.pieceColor[0]}${pieceMap[square.pieceType]}`
+  //     divArray[i].innerHTML = `<img src="./${folder}/${piece}.png" alt="${square.pieceColor}${square.pieceType}">`;
+  //   }
+  // }
+  //
+  // As you can see this has really reduced the number of different possible paths that the code has, which recudces
+  // the complexity. If you renamed the actual files that are being referenced to match your code more closely (i.e 
+  // folders called ./basic and ./anarcandy instead of ./assets and ./assets2, whiterook.png instead of wR.png etc)
+  // then you could also get rid of the map objects and just directly use the pieceSet, pieceType, and pieceColor values
+  // when building the string.
 
     if (pieceSet=='basic'){
     for (let i = 0; i < squaresArray.length; i ++){
@@ -471,7 +673,9 @@ mapImages()
 
 function
 changePieceButton(){
-    
+    // FEEDBACK
+    // you could take the mapImages() call out of the if statement and just have it once at the end of the
+    // changePieceButton function
     if (pieceSet=='basic') {pieceSet = 'anarcandy'; return mapImages();}
     else { pieceSet = 'basic'; return mapImages();}
     
@@ -482,6 +686,10 @@ changePieceButton(){
 function
 checkSquaresAroundKing(){
 
+  // FEEDBACK
+  // you're calling findBlackKing twice, which means that you're looping through the squaresArray twice. Not the end
+  // of the world but if the squaresArray was very large then you wouldn't want to do that. You could avoid it by
+  // assinging the result of findBlackKing and findWhiteKing to a variable first, then call .row and .col on those variables.
  let brow = findBlackKing().row;
  let bcol = findBlackKing().col;
 
@@ -493,6 +701,15 @@ checkSquaresAroundKing(){
         if (0 == findBlackKing().whiteCount){return true;}
 
        //free squares
+       // FEEDBACK
+       // in here you're also calling findSquare multiple times for the same square, so it is looping through the 
+       // squares array multiple times just to find the same square. you could assign the results to a variable first
+       // to not have to search for the square multiple times.
+       //
+       // Also this is another case where you could think about handling it more dynamically, instead of hard coding 
+       // all the if statements. You could somehow store the row & column offsets as pairs of +1 ,0, or -1, and loop
+       // over those pairs of offsets, checking whatever it is these if statements check. I won't write an example
+       // snippet this time because it's late and I'm tired haha
        if (findSquare(brow +1 ,bcol) != undefined && findSquare(brow +1 ,bcol).whiteCount == 0 && findSquare(brow +1 ,bcol).pieceColor == '' ) {console.log ('1');return true}
        if (findSquare(brow +1 ,bcol + 1) != undefined && findSquare(brow +1 ,bcol + 1).whiteCount == 0 && findSquare(brow +1 ,bcol + 1).pieceColor == '' ) {console.log ('2'); return true}
        if (findSquare(brow ,bcol + 1) != undefined && findSquare(brow  ,bcol + 1).whiteCount == 0 && findSquare(brow  ,bcol + 1).pieceColor == '' ) {console.log ('3');return true}
@@ -549,11 +766,14 @@ checkSquaresAroundKing(){
 //      then the game is over.  The actual movement of the pieces happens after this function. This function calls those movement functions. 
 function
 mateChecker(){
-
+    
     checkMate = true;
 
     if (true == checkSquaresAroundKing()){ checkMate = false;}
-
+      // FEEDBACK
+      // similar comment to the checkSquaresAroundKing feedback. Lots of repeated lines here with just a few things change.
+      // Could again thinking about storing those differences for each piece type somehow and just looping over them, instead of hard coding
+      // each required call to mateDirection
       for (let i = 0; i < squaresArray.length; i++){
         if (squaresArray[i].pieceType == 'rook' && squaresArray[i].pieceColor == currentTurnColor){
       
@@ -627,6 +847,8 @@ mateDirection(squaresArray[i].row , squaresArray[i].col -1, 'left',findSquare(sq
     
  function
 mateDirection(row, col, direction,startSquare){
+// FEEDBACK
+// lots of repeated calls to findSquare again, can assign to a variable to prevent searching multiple times
 
     //already found a way out of checkmate - no need to look further.
 if (false == checkMate) {return}
@@ -696,6 +918,18 @@ if (false == checkMate) {return}
 
 
     if (direction == 'stop'){return}
+      // FEEDBACK
+      // again lots of repeated code, could store the row & column offsets per directly and just call mateDirection once
+      // with the offsets based on the direction.
+      //
+      // const offsets = {
+      //   'up': {row 1, col: 0},
+      //   'down': {row: -1, col: 0},
+      //   'right': {row: 0, col: 1 },
+      //   'left': {row: 0, col: -1 }
+      //   etc...
+      // }
+      // return mateDirection(row + offsets[direction].row, col + offsets[direction].col, direction);
 
     if (direction == 'up'){
     return mateDirection(row +1, col,'up')}
@@ -734,7 +968,8 @@ if (false == checkMate) {return}
 
 function
 matePawn(row,col,forward){
-
+  // FEEDBACK
+  // again lots of repeated calls to findSquare
     if(findSquare(row,col) == undefined){return}
 
     if(findSquare(row,col).altPieceColor == '' && forward == true){ findSquare(row,col).altPieceColor = currentTurnColor;
@@ -752,7 +987,9 @@ return}
 //  This function uses the same basic algorithm of moving the pieces but its job is to mark the lines of sight of pieces. This is to detect for check and checkmate.
 function
 countChecker(){
-   
+   // FEEDBACK
+   // same feedback with storing the offsets per piece and looping over them instead of hardcoding each one. Would even
+   // be able to reuse the same offsets as the mate checker I think?
     for (let i = 0; i < squaresArray.length; i++){
 
         if (squaresArray[i].altPieceType == 'rook' && squaresArray[i].altPieceColor != currentTurnColor){
@@ -835,7 +1072,9 @@ if (findSquare(row,col).altPieceType != '' && findSquare(row,col).altPieceType !
     }
     return 
 } else {
-
+  // FEEDBACK
+  // this section of code is done in both the if part, and the else part. Could just pull it out of the if statement
+  // entirely and only write it once.
         if (currentTurnColor == 'white'){
             findSquare(row,col).blackCount++;
         }
@@ -844,7 +1083,8 @@ if (findSquare(row,col).altPieceType != '' && findSquare(row,col).altPieceType !
         }
        
 if (direction == 'stop'){return}
-
+// FEEDBACK
+// same thing with storing the offsets and only having to call countDirection once
 if (direction == 'up'){
 return countDirection(row +1, col,'up')}
 
@@ -881,7 +1121,8 @@ return countDirection(row +1, col,'up')}
 
 function
 pieceChecker(clickedSquare, row, col,){
-    
+    // same thing with storing the offsets per peice and only having to call pieceDirection once
+
         if ('rook' == clickedSquare.pieceType && clickedSquare.pieceColor == currentTurnColor){
 pieceDirection(row + 1,col, 'up')
 pieceDirection(row -1, col,'down' )
@@ -950,7 +1191,8 @@ if ('pawn' == clickedSquare.pieceType && 'black' == currentTurnColor){ return bP
 //
 function
 pieceDirection(row, col,  direction){
-    
+    // FEEDBACK
+    // same again with multile calls to findSquare
  if (findSquare(row,col) == undefined) {return}
    if ( findSquare(row,col).pieceColor == currentTurnColor ){
         
@@ -973,7 +1215,10 @@ pieceDirection(row, col,  direction){
  
 if (direction == 'stop'){return}
 
+// FEEDBACK
+// can you guess what the feedback on this section is?
 if (direction == 'up'){
+
 return pieceDirection(row +1, col,'up')}
 
  if (direction == 'down') {
@@ -1031,6 +1276,20 @@ bEnPassantLeft(row,col){
     let bEnPassantArray = [ b4Square,c4Square,d4Square,e4Square,f4Square,g4Square,h4Square]
 
     for (let i = 0; i < bEnPassantArray.length; i++){
+      // FEEDBACK
+      // pretty big if statement with multiple parts. Could pull the different pars out into variables with descriptive
+      // names, which would make the if statement easier to read
+      //
+      // const isBlackPawn = bEnPassantArray[i].pieceType == 'pawn' && bEnPassantArray[i].pieceColor == 'black';
+      // const leftOfPawnIsWhitePawn = leftOfPawn.pieceType == 'pawn' && leftOfPawn.pieceColor == 'white';
+      //   lastObject[0] == leftStartingSquare
+      //
+      // if (currentTurnColor == 'black' && isBlackPawn && leftOfPawnIsWhitePawn && lastObject[0] == leftStartingSquare){
+      //
+      // currentTurnColor == 'black' and lastObject[0] == leftStartingSquare also don't depend on anything inside the
+      // for loop from what I can tell, so those could probably be pulled out into a separate if statement (use guard clause 👀)
+      // to further simplify this if statement
+
         if (bEnPassantArray[i].pieceType == 'pawn' && bEnPassantArray[i].pieceColor == 'black' && currentTurnColor == 'black' && leftOfPawn.pieceType == 'pawn'
         && leftOfPawn.pieceColor == 'white' && lastObject[0] == leftStartingSquare){
           console.log('enPassant')
@@ -1045,7 +1304,9 @@ bEnPassantLeft(row,col){
 
 function
 bEnPassantRight(row,col){
- 
+    // FEEDBACK
+    // same feedback as in bEnPassantLeft. Also this function is mostly the same as the other one, so you could probably,
+    // find a way to combine them into one, maybe by passing the findSquare offsets in as arguments?
     rightOfPawn = findSquare(row,col + 1)
     rightStartingSquare = findSquare(row - 2,col + 1)
     rightFindTradeSquare = findSquare(row-1,col + 1)
@@ -1086,7 +1347,11 @@ bEnPassantLeftMove(row,col){
 
 function
 bEnPassantRightMove(row,col){
-   
+  // FEEDBACK
+  // bEnPassantRightMove and bEnPassantLeftMove are identical except that one has +1 for deparetureSquare and the
+  // other has -1. Can probably combine them and handle that one difference a different way, rather than duplicating 
+  // the whole function. Even the ones for the white en passant moves can probably be combined all into one function
+  // that probably takes in the differences (like the color and the left/right offset) as arguments.
          InitialDivSquare = findSquare(row,col);
         aboveOrBelowInitalSquare = findSquare(row+1,col);
         deparetureSquare = findSquare(row+1,col-1)
@@ -1104,7 +1369,8 @@ bEnPassantRightMove(row,col){
 
 function
 wEnPassantLeft(row,col){
- 
+    // FEEDBACK
+    // same feedback as the other en passant functions
     leftOfPawn = findSquare(row,col - 1)
     leftStartingSquare = findSquare(row + 2,col - 1)
     leftFindTradeSquare = findSquare(row+1,col - 1)
@@ -1124,7 +1390,8 @@ wEnPassantLeft(row,col){
 
 function
 wEnPassantRight(row,col){
- 
+    // FEEDBACK
+    // same feedback as the other en passant functions
     rightOfPawn = findSquare(row,col + 1)
     rightStartingSquare = findSquare(row + 2,col + 1)
     rightFindTradeSquare = findSquare(row+1,col + 1)
@@ -1191,6 +1458,9 @@ wPawn(row,col){
     let doubleJumpEncounterSquare = findSquare(row+1,col)
  
    
+  // FEEDBACk
+  // could simplify this using an array  and Array.includes() I think
+  // if([b2Square,c2Square,d2Square,e2Square,f2Square,g2Square,h2Square].includes(currentSquare)){
 
    if (currentSquare == b5Square || currentSquare ==c5Square || currentSquare ==d5Square || currentSquare ==e5Square
     || currentSquare ==f5Square || currentSquare ==g5Square || currentSquare ==h5Square){wEnPassantLeft(row,col)}
@@ -1306,7 +1576,8 @@ bPawn(row,col){
     let doubleJumpEncounterSquare = findSquare(row-1,col)
    
     let currentSquare = findSquare(row,col)
-
+    // FEEDBACK
+    // again can simplify using an array and Array.includes()
     if (currentSquare == b4Square || currentSquare ==c4Square || currentSquare ==d4Square || currentSquare ==e4Square
         || currentSquare ==f4Square || currentSquare ==g4Square || currentSquare ==h4Square){bEnPassantLeft(row,col)}
 
@@ -1481,6 +1752,9 @@ mainEventFunction(currentSquare){
         return
 
     } else if ('white' == currentTurnColor && 'white' == currentSquare.pieceColor) {
+        // The block within this if statement is exactly the same as the block within the next one (for black's turn)
+        // except for the order of the pieceChecker call and possibilityState = true. If that ordering is not actually
+        // important (which I think is the case) then you could remove the if checks entirely
         currentObject = currentSquare;
         pieceChecker(currentSquare, currentSquare.row, currentSquare.col);
         possibilityState = true;
@@ -1501,7 +1775,8 @@ mainEventFunction(currentSquare){
 //      Castling
 
 g1Div.addEventListener('click', () => {
-
+  // FEEDBACK
+  // another big if statement that could be broken down into well named variables, which would help with readability
     if (currentObject == e1Square && false == wKingMoved && false == h1RookMoved && f1Square.pieceType == '' && g1Square.pieceType == ''
         && 0 == g1Square.blackCount && 0 == f1Square.blackCount&& 0 == e1Square.blackCount) {
         e1Square.pieceType = '';
