@@ -287,37 +287,39 @@ setInterval(unvisualizePossibilities, 100);
 
 //Map Images
 function
-mapImages() {
+mapImages(){
 
-    const pieceMap = {
-        "knight": "N",
-        "bishop": "B",
-        "rook": "R",
-        "queen": "Q",
-        "king": "K",
-        "pawn": "P"
+const pieceMap = {
+    "knight" : "N",
+    "bishop" : "B",
+    "rook" : "R",
+    "queen" : "Q",
+    "king" : "K",
+    "pawn" : "P"
+}
+
+const fileTypeMap = {
+    "anarcandy" : "svg",
+    "basic" : "png"
+}
+
+const colorMap = {
+    "black" : "b",
+    "white" : "w"
+}
+
+for (let i = 0; i < squaresArray.length; i++)
+{
+    if (squaresArray[i].pieceType == "")
+    {
+        divArray[i].innerHTML = "";
+        continue;
     }
+    
+    divArray[i].innerHTML =
+     `<img src="./${pieceSet}/${colorMap[squaresArray[i].pieceColor]}${pieceMap[squaresArray[i].pieceType]}.${fileTypeMap[pieceSet]}">  `
 
-    const fileTypeMap = {
-        "anarcandy": "svg",
-        "basic": "png"
-    }
-
-    const colorMap = {
-        "black": "b",
-        "white": "w"
-    }
-
-    for (let i = 0; i < squaresArray.length; i++) {
-        if (squaresArray[i].pieceType == "") {
-            divArray[i].innerHTML = "";
-            continue;
-        }
-
-        divArray[i].innerHTML =
-            `<img src="./${pieceSet}/${colorMap[squaresArray[i].pieceColor]}
-            ${pieceMap[squaresArray[i].pieceType]}.${fileTypeMap[pieceSet]}">`
-    }
+}
 
 }
 mapImages();
