@@ -1,111 +1,52 @@
 //v
-//  My global variables
-//
-var currentTurnColor = 'white';
-var possibilityState = false;
-var currentObject;
+//  Global variables
+let currentTurnColor = 'white';
+let possibilityState = false;
+let currentObject;
 
-var pieceSet = 'anarcandy';
-var lastObject = [];    
-var wKingMoved = false;
-var bKingMoved = false;
-var h1RookMoved = false;
-var a1RookMoved = false;
-var a8RookMoved = false;
-var h8RookMoved = false;
-var wKingInCheck = false;
-var bKingInCheck = false;
-var squareName;
+let pieceSet = 'anarcandy';
+let lastObject = [];    
+let wKingMoved = false;
+let bKingMoved = false;
+let h1RookMoved = false;
+let a1RookMoved = false;
+let a8RookMoved = false;
+let h8RookMoved = false;
+let wKingInCheck = false;
+let bKingInCheck = false;
+let squareName;
 let checkMate = false;
 
+//v
+// En Passant
+
+let leftOfPawn;
+let leftStartingSquare;
+let leftFindTradeSquare;
+let leftTradeSquare;
+let rightOfPawn;
+let rightStartingSquare;
+let rightFindTradeSquare;
+let rightTradeSquare;
+let InitialDivSquare;
+let aboveOrBelowInitalSquare;
+let departureSquare;
+
+
+
 
 //
-//  Query Selectors for squares and an array for the divs
-//  
-const a1Div = document.querySelector('.a1-Square');
-const a2Div = document.querySelector('.a2-Square');
-const a3Div = document.querySelector('.a3-Square');
-const a4Div = document.querySelector('.a4-Square');
-const a5Div = document.querySelector('.a5-Square');
-const a6Div = document.querySelector('.a6-Square');
-const a7Div = document.querySelector('.a7-Square');
-const a8Div = document.querySelector('.a8-Square');
+// Selecting HTML
+const divArray = [];
+"abcdefgh".split('').forEach( (letter) => {
+    "12345678".split('').forEach( (number) => {
+divArray.push( this[`${letter}${number}div`] = document.querySelector(`.${letter}${number}-Square`))
+    })
+});
 
-const b1Div = document.querySelector('.b1-Square');
-const b2Div = document.querySelector('.b2-Square');
-const b3Div = document.querySelector('.b3-Square');
-const b4Div = document.querySelector('.b4-Square');
-const b5Div = document.querySelector('.b5-Square');
-const b6Div = document.querySelector('.b6-Square');
-const b7Div = document.querySelector('.b7-Square');
-const b8Div = document.querySelector('.b8-Square');
+//c
+//  Squares Class
 
-const c1Div = document.querySelector('.c1-Square');
-const c2Div = document.querySelector('.c2-Square');
-const c3Div = document.querySelector('.c3-Square');
-const c4Div = document.querySelector('.c4-Square');
-const c5Div = document.querySelector('.c5-Square');
-const c6Div = document.querySelector('.c6-Square');
-const c7Div = document.querySelector('.c7-Square');
-const c8Div = document.querySelector('.c8-Square');
-
-const d1Div = document.querySelector('.d1-Square');
-const d2Div = document.querySelector('.d2-Square');
-const d3Div = document.querySelector('.d3-Square');
-const d4Div = document.querySelector('.d4-Square');
-const d5Div = document.querySelector('.d5-Square');
-const d6Div = document.querySelector('.d6-Square');
-const d7Div = document.querySelector('.d7-Square');
-const d8Div = document.querySelector('.d8-Square');
-
-const e1Div = document.querySelector('.e1-Square');
-const e2Div = document.querySelector('.e2-Square');
-const e3Div = document.querySelector('.e3-Square');
-const e4Div = document.querySelector('.e4-Square');
-const e5Div = document.querySelector('.e5-Square');
-const e6Div = document.querySelector('.e6-Square');
-const e7Div = document.querySelector('.e7-Square');
-const e8Div = document.querySelector('.e8-Square');
-
-const f1Div = document.querySelector('.f1-Square');
-const f2Div = document.querySelector('.f2-Square');
-const f3Div = document.querySelector('.f3-Square');
-const f4Div = document.querySelector('.f4-Square');
-const f5Div = document.querySelector('.f5-Square');
-const f6Div = document.querySelector('.f6-Square');
-const f7Div = document.querySelector('.f7-Square');
-const f8Div = document.querySelector('.f8-Square');
-
-const g1Div = document.querySelector('.g1-Square');
-const g2Div = document.querySelector('.g2-Square');
-const g3Div = document.querySelector('.g3-Square');
-const g4Div = document.querySelector('.g4-Square');
-const g5Div = document.querySelector('.g5-Square');
-const g6Div = document.querySelector('.g6-Square');
-const g7Div = document.querySelector('.g7-Square');
-const g8Div = document.querySelector('.g8-Square');
-
-const h1Div = document.querySelector('.h1-Square');
-const h2Div = document.querySelector('.h2-Square');
-const h3Div = document.querySelector('.h3-Square');
-const h4Div = document.querySelector('.h4-Square');
-const h5Div = document.querySelector('.h5-Square');
-const h6Div = document.querySelector('.h6-Square');
-const h7Div = document.querySelector('.h7-Square');
-const h8Div = document.querySelector('.h8-Square');
-
-//
-// This array corrosponds with squaresArray to make matching DIV with Object easy.
-//
-const divArray = [a1Div,a2Div,a3Div,a4Div,a5Div,a6Div,a7Div,a8Div,b1Div,b2Div,
-    b3Div,b4Div,b5Div,b6Div,b7Div,b8Div,c1Div,c2Div,c3Div,c4Div,c5Div,c6Div,c7Div,c8Div,
-    d1Div, d2Div, d3Div,d4Div,d5Div,d6Div,d7Div,d8Div,e1Div,e2Div,e3Div,e4Div,e5Div,e6Div,
-    e7Div,e8Div,f1Div,f2Div,f3Div,f4Div,f5Div,f6Div,f7Div,f8Div,g1Div,g2Div,g3Div,g4Div,
-    g5Div,g6Div,g7Div,g8Div,h1Div,h2Div,h3Div,h4Div,h5Div,h6Div,h7Div,h8Div]
-
-//
-//  Class for making Squares
-//
 class Square {
 
     constructor(_rowParam, _colParam, _typeParam, _colorParam){
@@ -122,19 +63,16 @@ class Square {
         this.altPieceType = '';     //alt board state for moving around pieces without messing up mainboard
         this.pastPieceType = '';        //board state 1 move in the past
         this.pastPieceColor = '';
-
- 
-
+        this.enPassant = false;
+        
         squaresArray.push(this);
-       
-
-    }
+           }
 
 }
 
-//
+//v
 //  Making Squares
-//
+
 let squaresArray = [];
    
 let a1Square = new Square(0,0,'rook','white');
@@ -211,28 +149,18 @@ let h5Square = new Square(4,7,'','');
 let h6Square = new Square(5,7,'','');
 let h7Square = new Square(6,7,'pawn','black');
 let h8Square = new Square(7,7,'rook','black');
+
 const benPassantArray = [a3Square, b3Square, c3Square, d3Square, e3Square, f3Square, g3Square, h3Square];
 const wenPassantArray = [a6Square, b6Square, c6Square, d6Square, e6Square, f6Square, g6Square, h6Square];
 
-function
-findBlackKing(){
 
-    for (let i = 0; i < squaresArray.length; i ++){
-if (squaresArray[i].pieceType == 'king' && squaresArray[i].pieceColor == 'black') { return squaresArray[i]}
-    }
-}
 
 function
-findWhiteKing(){
- 
-    for (let i = 0; i < squaresArray.length; i ++){
-if (squaresArray[i].pieceType == 'king' && squaresArray[i].pieceColor == 'white') { return squaresArray[i]}
-    }
-}
+findKing(color)
+{
+    return squaresArray.find( square => square.pieceType == 'king' && square.pieceColor == color)
+};
 
-//f
-//
-//
 function
 pastBoardUpdate(){
     for (let i = 0; i < squaresArray.length; i++ ){
@@ -251,7 +179,7 @@ updateRealWithPastBoard(){
 
 //f
 //  Find the square with col and row coordinates and output that object
-//
+
 function
 findSquare(rowinput, colinput){
 
@@ -274,26 +202,32 @@ resetCount(){
 
 
 function
-checkChecker(){
+isKingInCheck(){
 
     for  (let i = 0; i < squaresArray.length; i ++){
-         if ('king' == squaresArray[i].pieceType && 'white' == squaresArray[i].pieceColor && 0 != squaresArray[i].blackCount ){
-                divArray[i].style.backgroundImage = "url('./assets/red2.jpg')"
-               
-                return mateChecker();
-        }
-    }
 
-    for (let i = 0; i < squaresArray.length; i ++){
-            if ('king' == squaresArray[i].pieceType && 'black' == squaresArray[i].pieceColor && 0 != squaresArray[i].whiteCount ){
-                divArray[i].style.backgroundImage = "url('./assets/red2.jpg')"
-                return mateChecker();
+         if ('king' == squaresArray[i].pieceType && 'white' == squaresArray[i].pieceColor && 0 != squaresArray[i].blackCount ){
+            divArray[i].classList.add("check")  
+            return mateChecker();
+         } else {
+                divArray[i].classList.remove("check")
+            }
+
+                if ('king' == squaresArray[i].pieceType && 'black' == squaresArray[i].pieceColor && 0 != squaresArray[i].whiteCount ){
+                    divArray[i].classList.add("check")
+                    return mateChecker();
+        
+        }else {
+            divArray[i].classList.remove("check")
         }
-    }
+ 
+
+
+}       
 }
 
 
-//
+//f
 //      Making a copy of the board - so that I can modify it while still maintaining the true board state
 function
 altSnapshot(){
@@ -304,25 +238,28 @@ altSnapshot(){
 }
 
 
-//
-//      This functions relies on a version of the board that is stuck in the past. If a move is made and the king is still in check, we just update the real board with the board in the past and skip changing 
-//      turns. This way its impossible to make a move that doesnt prevent checkmate or to put yourself in check. 
+//f
+//      This functions relies on a version of the board that is stuck in the past. If a move is made and the king is still in check, we just update the real board
+//       with the board in the past and skip changing  turns. This way its impossible to make a move that doesnt prevent checkmate or to put yourself in check. 
 function
 CheckForPin(){
 
-    let whiteKingSquare = findWhiteKing();
-    let blackKingSquare = findBlackKing();
+    let whiteKingSquare = findKing('white');
+    let blackKingSquare = findKing('black');
     resetCount();
     altSnapshot();
     countChecker();
  
-    if (currentTurnColor == 'black' && blackKingSquare.whiteCount > 0){  updateRealWithPastBoard(); resetCount(); return false }
-    if (currentTurnColor == 'white' && whiteKingSquare.blackCount > 0){  updateRealWithPastBoard(); resetCount(); return false }
+    if (currentTurnColor == 'black' && blackKingSquare.whiteCount > 0
+     || currentTurnColor == 'white' && whiteKingSquare.blackCount > 0){ 
+         updateRealWithPastBoard();
+          resetCount();
+           return false }
+
 }
 
 function
-turnColorSwitcher(){    if (currentTurnColor == 'white'){ currentTurnColor = 'black'; }
-else{ currentTurnColor = 'white'; }}
+turnColorSwitcher(){    currentTurnColor = currentTurnColor == 'white' ? 'black':'white'}
 
 
 function
@@ -333,7 +270,7 @@ changeTurn(){
    turnColorSwitcher();
     possibilityState = false;
     resetPossibleAndEncounter();
-    unvisualizePossibilities()
+    
 
     altSnapshot();
     mapImages();
@@ -341,131 +278,97 @@ changeTurn(){
     lastObject.push(currentObject);
     resetCount();
     countChecker()
-    checkChecker();
+    isKingInCheck();
     pastBoardUpdate()
 }
 
-//
+//f
 //  Possible and encounter refers to movement possibilities of pieces. This resets those possibilities. 
-//
 function
 resetPossibleAndEncounter() {
     for (let i = 0; i < squaresArray.length; i++) {
         squaresArray[i].possible = false;
         squaresArray[i].encounter = false;
+        squaresArray[i].enPassant = false;
     }
 }
 
 function
 visualizePossibilities(){
         for (let i = 0; i < squaresArray.length; i ++){
-        if (squaresArray[i].encounter == true) {divArray[i].style.backgroundImage = "url('./assets/red2.jpg')";}
-            else if (squaresArray[i].possible == true) {divArray[i].style.backgroundImage = "url('./assets/index.png')";}  
+        if (squaresArray[i].encounter == true) 
+        {
+            divArray[i].classList.add("encounter");
+          
+}
+
+if (squaresArray[i].enPassant == true) 
+{
+  
+  
+  divArray[i].classList.add("enpassant");
+
+}
+
+             if (squaresArray[i].possible == true)
+             {divArray[i].classList.add("possible")}
+            
         }
-       
+   
     }
+
+
 function
 unvisualizePossibilities(){
     for (let i = 0; i < squaresArray.length; i ++){
-    if (squaresArray[i].encounter == false) {divArray[i].style.backgroundImage = "";}
-        else if (squaresArray[i].possible == false) {divArray[i].style.backgroundImage = ''}
+    if (squaresArray[i].encounter == false)   {divArray[i].classList.remove("encounter")}
+        if (squaresArray[i].possible == false)   {divArray[i].classList.remove("possible")}
+        if (squaresArray[i].enPassant == false)   {divArray[i].classList.remove("enpassant")}
         }
     }
+
+    setInterval(visualizePossibilities, 100);
+    setInterval(unvisualizePossibilities, 100);
    
 //
 //  Map Images
-//
+
 function
 mapImages(){
 
-    if (pieceSet=='basic'){
-    for (let i = 0; i < squaresArray.length; i ++){
-    if (squaresArray[i].pieceType == ''){divArray[i].innerHTML =''
-    }else
-    if (squaresArray[i].pieceType == 'rook' && squaresArray[i].pieceColor == 'white'){
-        divArray[i].innerHTML = '<img src="./assets/wR.png" alt="WhiteRook">'
-    }else
-    if (squaresArray[i].pieceType == 'knight' && squaresArray[i].pieceColor == 'white'){
-        divArray[i].innerHTML = '<img src="./assets/wN.png" alt="WhiteKnight">'
-    }else
-    if (squaresArray[i].pieceType == 'bishop' && squaresArray[i].pieceColor == 'white'){
-         divArray[i].innerHTML = '<img src="./assets/wB.png" alt="WhiteBishop">'
-    }else
-    if (squaresArray[i].pieceType == 'queen' && squaresArray[i].pieceColor == 'white'){
-        divArray[i].innerHTML = '<img src="./assets/wQ.png" alt="WhiteQueen">'
-    }else
-    if (squaresArray[i].pieceType == 'king' && squaresArray[i].pieceColor == 'white'){
-        divArray[i].innerHTML = '<img src="./assets/wK.png" alt="WhiteKing">'
-    }else
-    if (squaresArray[i].pieceType == 'pawn' && squaresArray[i].pieceColor == 'white'){
-        divArray[i].innerHTML = '<img src="./assets/wP.png" alt="WhitePawn">'
-    }else
+const pieceMap = {
+    "knight" : "N",
+    "bishop" : "B",
+    "rook" : "R",
+    "queen" : "Q",
+    "king" : "K",
+    "pawn" : "P"
+}
 
+const fileTypeMap = {
+    "anarcandy" : "svg",
+    "basic" : "png"
+}
 
-    if (squaresArray[i].pieceType == 'rook' && squaresArray[i].pieceColor == 'black'){
-        divArray[i].innerHTML = '<img src="./assets/bR.png" alt="BlackRook">'
-    }else
-    if (squaresArray[i].pieceType == 'knight' && squaresArray[i].pieceColor == 'black'){
-        divArray[i].innerHTML = '<img src="./assets/bN.png" alt="BlackKnight">'
-    }else
-    if (squaresArray[i].pieceType == 'bishop' && squaresArray[i].pieceColor == 'black'){
-        divArray[i].innerHTML = '<img src="./assets/bB.png" alt="BlackBishop">'
-    }else
-    if (squaresArray[i].pieceType == 'queen' && squaresArray[i].pieceColor == 'black'){
-        divArray[i].innerHTML = '<img src="./assets/bQ.png" alt="BlackQueen">'
-    }else
-    if (squaresArray[i].pieceType == 'king' && squaresArray[i].pieceColor == 'black'){
-        divArray[i].innerHTML = '<img src="./assets/bK.png" alt="BlackKing">'
-    }else
-    if (squaresArray[i].pieceType == 'pawn' && squaresArray[i].pieceColor == 'black'){
-        divArray[i].innerHTML = '<img src="./assets/bP.png" alt="BlackPawn">'
+const colorMap = {
+    "black" : "b",
+    "white" : "w"
+}
+
+for (let i = 0; i < squaresArray.length; i++)
+{
+    if (squaresArray[i].pieceType == "")
+    {
+        divArray[i].innerHTML = "";
+        continue;
     }
+    
+    divArray[i].innerHTML =
+     `<img src="./${pieceSet}/${colorMap[squaresArray[i].pieceColor]}${pieceMap[squaresArray[i].pieceType]}.${fileTypeMap[pieceSet]}">  `
+
 }
+
 }
-
-if (pieceSet == 'anarcandy'){
-    for (let i = 0; i < squaresArray.length; i ++){
-   if (squaresArray[i].pieceType == ''){divArray[i].innerHTML =''
-    }else
-    if (squaresArray[i].pieceType == 'rook' && squaresArray[i].pieceColor == 'white'){
-        divArray[i].innerHTML = '<img src="./assets2/wR.svg" alt="WhiteRook">'
-    }else
-    if (squaresArray[i].pieceType == 'knight' && squaresArray[i].pieceColor == 'white'){
-        divArray[i].innerHTML = '<img src="./assets2/wN.svg" alt="WhiteKnight">'
-    }else
-    if (squaresArray[i].pieceType == 'bishop' && squaresArray[i].pieceColor == 'white'){
-         divArray[i].innerHTML = '<img src="./assets2/wB.svg" alt="WhiteBishop">'
-    }else
-    if (squaresArray[i].pieceType == 'queen' && squaresArray[i].pieceColor == 'white'){
-        divArray[i].innerHTML = '<img src="./assets2/wQ.svg" alt="WhiteQueen">'
-    }else
-    if (squaresArray[i].pieceType == 'king' && squaresArray[i].pieceColor == 'white'){
-        divArray[i].innerHTML = '<img src="./assets2/wK.svg" alt="WhiteKing">'
-    }else
-    if (squaresArray[i].pieceType == 'pawn' && squaresArray[i].pieceColor == 'white'){
-        divArray[i].innerHTML = '<img src="./assets2/wP.svg" alt="WhitePawn">'
-    }else
-
-
-    if (squaresArray[i].pieceType == 'rook' && squaresArray[i].pieceColor == 'black'){
-        divArray[i].innerHTML = '<img src="./assets2/bR.svg" alt="BlackRook">'
-    }else
-    if (squaresArray[i].pieceType == 'knight' && squaresArray[i].pieceColor == 'black'){
-        divArray[i].innerHTML = '<img src="./assets2/bN.svg" alt="BlackKnight">'
-    }else
-    if (squaresArray[i].pieceType == 'bishop' && squaresArray[i].pieceColor == 'black'){
-        divArray[i].innerHTML = '<img src="./assets2/bB.svg" alt="BlackBishop">'
-    }else
-    if (squaresArray[i].pieceType == 'queen' && squaresArray[i].pieceColor == 'black'){
-        divArray[i].innerHTML = '<img src="./assets2/bQ.svg" alt="BlackQueen">'
-    }else
-    if (squaresArray[i].pieceType == 'king' && squaresArray[i].pieceColor == 'black'){
-        divArray[i].innerHTML = '<img src="./assets2/bK.svg" alt="BlackKing">'
-    }else
-    if (squaresArray[i].pieceType == 'pawn' && squaresArray[i].pieceColor == 'black'){
-        divArray[i].innerHTML = '<img src="./assets2/bP.svg" alt="BlackPawn">'
-    } }
-}}
 
 mapImages()
 
@@ -477,72 +380,117 @@ changePieceButton(){
     
 }
 
-//
-//      True means the king found a way out of mate - The count refers to the opponets pieces line of sight. Count of zero means no piece is attacking that square. 
+
 function
-checkSquaresAroundKing(){
-
- let brow = findBlackKing().row;
- let bcol = findBlackKing().col;
-
- let row = findWhiteKing().row;
- let col = findWhiteKing().col;
-
-      if ('black' == currentTurnColor){
-
-        if (0 == findBlackKing().whiteCount){return true;}
-
-       //free squares
-       if (findSquare(brow +1 ,bcol) != undefined && findSquare(brow +1 ,bcol).whiteCount == 0 && findSquare(brow +1 ,bcol).pieceColor == '' ) {console.log ('1');return true}
-       if (findSquare(brow +1 ,bcol + 1) != undefined && findSquare(brow +1 ,bcol + 1).whiteCount == 0 && findSquare(brow +1 ,bcol + 1).pieceColor == '' ) {console.log ('2'); return true}
-       if (findSquare(brow ,bcol + 1) != undefined && findSquare(brow  ,bcol + 1).whiteCount == 0 && findSquare(brow  ,bcol + 1).pieceColor == '' ) {console.log ('3');return true}
-       if (findSquare(brow -1 ,bcol + 1) != undefined && findSquare(brow-1  ,bcol + 1).whiteCount == 0 && findSquare(brow-1  ,bcol + 1).pieceColor == '' ) {console.log ('8');return true}
-       if (findSquare(brow -1 ,bcol) != undefined && findSquare(brow -1 ,bcol).whiteCount == 0 && findSquare(brow -1 ,bcol).pieceColor == '' ) {console.log ('4');return true}
-       if (findSquare(brow -1 ,bcol -1) != undefined && findSquare(brow -1 ,bcol-1).whiteCount == 0 && findSquare(brow -1 ,bcol-1).pieceColor == '' ) {console.log ('5');return true}
-       if (findSquare(brow  ,bcol -1) != undefined && findSquare(brow  ,bcol-1).whiteCount == 0 && findSquare(brow  ,bcol-1).pieceColor == '' ) {console.log ('6');return true}
-       if (findSquare(brow +1 ,bcol - 1) != undefined && findSquare(brow +1 ,bcol - 1).whiteCount == 0 && findSquare(brow +1 ,bcol - 1).pieceColor == '' ) {console.log ('17');return true}
-
-//squares with a white piece in it.
-       if (findSquare(brow +1 ,bcol) != undefined &&  findSquare(brow +1 ,bcol).whiteCount == 0 && findSquare(brow +1 ,bcol).pieceColor == 'white' ) {console.log ('9');return true}
-       if (findSquare(brow +1 ,bcol + 1) != undefined && findSquare(brow +1 ,bcol + 1).whiteCount == 0 && findSquare(brow +1 ,bcol + 1).pieceColor == 'white' ) {console.log ('10');return true}
-       if (findSquare(brow ,bcol + 1) != undefined && findSquare(brow  ,bcol + 1).whiteCount == 0 && findSquare(brow  ,bcol + 1).pieceColor == 'white'  ) {console.log ('11');return true}
-       if (findSquare(brow -1 ,bcol + 1) != undefined &&  findSquare(brow-1  ,bcol + 1).whiteCount == 0 && findSquare(brow-1  ,bcol + 1).pieceColor == 'white')  {console.log ('12');return true}
-       if (findSquare(brow -1 ,bcol) != undefined && findSquare(brow -1 ,bcol).whiteCount == 0 && findSquare(brow -1 ,bcol).pieceColor == 'white' ) {console.log ('13');return true}
-       if (findSquare(brow -1 ,bcol -1) != undefined &&  findSquare(brow -1 ,bcol-1).whiteCount == 0 && findSquare(brow -1 ,bcol-1).pieceColor == 'white' ) {console.log ('14');return true}
-       if ( findSquare(brow  ,bcol -1) != undefined && findSquare(brow  ,bcol-1).whiteCount == 0 && findSquare(brow  ,bcol-1).pieceColor == 'white' ) {console.log ('15');return true}
-       if (findSquare(brow +1 ,bcol - 1) != undefined &&  findSquare(brow +1 ,bcol - 1).whiteCount == 0 && findSquare(brow +1 ,bcol - 1).pieceColor == 'white' ) {console.log ('16');return true}
-    }
-
-
-    if ('white' == currentTurnColor){
-
-        if (0 == findWhiteKing().blackCount){return true;}
-
-       //free squares
-       if (findSquare(row +1 ,col) != undefined && findSquare(row +1 ,col).blackCount == 0 && findSquare(row +1 ,col).pieceColor == '' ) {console.log ('1');return true}
-       if (findSquare(row +1 ,col + 1) != undefined && findSquare(row +1 ,col + 1).blackCount == 0 && findSquare(row +1 ,col + 1).pieceColor == '' ) {console.log ('2'); return true}
-       if (findSquare(row ,col + 1) != undefined && findSquare(row  ,col + 1).blackCount == 0 && findSquare(row  ,col + 1).pieceColor == '' ) {console.log ('3');return true}
-       if (findSquare(row -1 ,col + 1) != undefined && findSquare(row-1  ,col + 1).blackCount == 0 && findSquare(row-1  ,col + 1).pieceColor == '' ) {console.log ('8');return true}
-       if (findSquare(row -1 ,col) != undefined && findSquare(row -1 ,col).blackCount == 0 && findSquare(row -1 ,col).pieceColor == '' ) {console.log ('4');return true}
-       if (findSquare(row -1 ,col -1) != undefined && findSquare(row -1 ,col-1).blackCount == 0 && findSquare(row -1 ,col-1).pieceColor == '' ) {console.log ('5');return true}
-       if (findSquare(row  ,col -1) != undefined && findSquare(row  ,col-1).blackCount == 0 && findSquare(row  ,col-1).pieceColor == '' ) {console.log ('6');return true}
-       if (findSquare(row +1 ,col - 1) != undefined && findSquare(row +1 ,col - 1).blackCount == 0 && findSquare(row +1 ,col - 1).pieceColor == '' ) {console.log ('17');return true}
-
-//squares with a black piece in it.
-       if (findSquare(row +1 ,col) != undefined &&  findSquare(row +1 ,col).blackCount == 0 && findSquare(row +1 ,col).pieceColor == 'black' ) {console.log ('9');return true}
-       if (findSquare(row +1 ,col + 1) != undefined && findSquare(row +1 ,col + 1).blackCount == 0 && findSquare(row +1 ,col + 1).pieceColor == 'black' ) {console.log ('10');return true}
-       if (findSquare(row ,col + 1) != undefined && findSquare(row  ,col + 1).blackCount == 0 && findSquare(row  ,col + 1).pieceColor == 'black'  ) {console.log ('11');return true}
-       if (findSquare(row -1 ,col + 1) != undefined &&  findSquare(row-1  ,col + 1).blackCount == 0 && findSquare(row-1  ,col + 1).pieceColor == 'black')  {console.log ('12');return true}
-       if (findSquare(row -1 ,col) != undefined && findSquare(row -1 ,col).blackCount == 0 && findSquare(row -1 ,col).pieceColor == 'black' ) {console.log ('13');return true}
-       if (findSquare(row -1 ,col -1) != undefined &&  findSquare(row -1 ,col-1).blackCount == 0 && findSquare(row -1 ,col-1).pieceColor == 'black' ) {console.log ('14');return true}
-       if ( findSquare(row  ,col -1) != undefined && findSquare(row  ,col-1).blackCount == 0 && findSquare(row  ,col-1).pieceColor == 'black' ) {console.log ('15');return true}
-       if (findSquare(row +1 ,col - 1) != undefined &&  findSquare(row +1 ,col - 1).blackCount == 0 && findSquare(row +1 ,col - 1).pieceColor == 'black' ) {console.log ('16');return true}
-    }
-
-
+checkSquaresAroundKing()
+{
+    let color = currentTurnColor;
     
-       return false
+     let row = findKing(color).row;
+     let col = findKing(color).col; 
+   let  arr =[[row + 1, col ],[row+ 1, col + 1],[row , col + 1],[row- 1, col + 1],
+                        [row - 1, col ],[row - 1, col - 1],[row, col - 1],[row + 1, col - 1]];
+
+                        console.log(arr[0][0])
+
+for (let i = 0; i < arr.length; i++)
+{
+
+
+   if (findSquare(arr[i][0], arr[i][1]) == undefined)
+   {
+    continue;
    }
+   
+let square = findSquare(arr[i][0], arr[i][1]);
+console.log(square)
+
+let count = color == "white" ?     square.blackCount  : square.whiteCount;
+if (count == 0 && square.pieceColor == '' ) {
+    console.log (i + "free square");
+    return true;
+}
+if ( count == 0 && square.pieceColor != currentTurnColor ) {
+    console.log (i + "trade square");
+    return true} 
+}
+
+return false; 
+
+} 
+
+
+
+
+
+function 
+recursionCallbackForMovement(row,col,direction,callBack)
+{
+
+    if (direction == 'stop' || "pawnUp" == direction)
+    {return}
+
+if (direction == 'up'){
+return callBack(row +1, col,'up')}
+
+ if (direction == 'down') {
+     return callBack(row - 1, col, 'down')
+ }
+
+ if (direction == 'right') {
+     return callBack(row, col + 1, 'right')
+ }
+
+ if (direction == 'left') {
+     return callBack(row, col - 1, 'left')
+ }
+
+ if (direction == 'up-left') {
+     return callBack(row + 1, col - 1, 'up-left')
+ }
+
+ if (direction == 'up-right') {
+    return callBack(row + 1, col + 1, 'up-right')
+}
+
+ if (direction == 'down-left') {
+     return callBack(row - 1, col - 1, 'down-left')
+ }
+
+ if (direction == 'down-right') {
+     return callBack(row - 1, col + 1, 'down-right')
+ }
+
+}
+
+
+function
+movement(row,col,myCallback,piece,option){
+let arr;
+    switch (piece) {
+        case "rook":
+            arr = [ [row +1,  col, "up"], [row-1, col, "down"], [row, col +1, "right"], [row,col -1,"left"] ];
+            break;
+            case "bishop":
+                arr = [ [row +1,  col +1, "up-right"], [row-1, col+1, "down-right"], [row-1, col-1, "down-left"], [row+1,col -1,"up-left"] ];
+                break;
+                case "knight":
+                    arr = [[row + 2, col + 1,'stop'],[row+ 1, col + 2,'stop'],[row - 1, col + 2,'stop'],[row- 2, col + 1,'stop'],
+                    [row - 2, col - 1,'stop'],[row - 1, col - 2,'stop'],[row+ 1, col - 2,'stop'],[row + 2, col - 1,'stop']];
+                    break;
+                    case "king":
+                        arr =[[row + 1, col ,'stop'],[row+ 1, col + 1,'stop'],[row , col + 1,'stop'],[row- 1, col + 1,'stop'],
+                        [row - 1, col ,'stop'],[row - 1, col - 1,'stop'],[row, col - 1,'stop'],[row + 1, col - 1,'stop']];
+                        break;
+    }
+
+   
+            for (let j = 0; j < arr.length; j++)
+            {
+                myCallback(arr[j][0],arr[j][1], arr[j][2],option)
+
+            }
+        } 
 
 //
 //      This function sets checkmate to true. It  then makes every possible move for a player in check. After every move, it checks to see if the king has a way out. If after its tried every move, its still checkMate == true
@@ -557,66 +505,69 @@ mateChecker(){
       for (let i = 0; i < squaresArray.length; i++){
         if (squaresArray[i].pieceType == 'rook' && squaresArray[i].pieceColor == currentTurnColor){
       
-  mateDirection(squaresArray[i].row + 1,squaresArray[i].col, 'up',findSquare(squaresArray[i].row,squaresArray[i].col)) 
-mateDirection(squaresArray[i].row - 1,squaresArray[i].col, 'down',findSquare(squaresArray[i].row,squaresArray[i].col)) 
-mateDirection(squaresArray[i].row , squaresArray[i].col + 1,'right',findSquare(squaresArray[i].row,squaresArray[i].col)) 
-mateDirection(squaresArray[i].row , squaresArray[i].col -1, 'left',findSquare(squaresArray[i].row,squaresArray[i].col)) 
-}
+            movement(squaresArray[i].row, squaresArray[i].col,mateDirection,"rook",findSquare(squaresArray[i].row,squaresArray[i].col));
+
+        }
 
 if (squaresArray[i].pieceType == 'bishop' && squaresArray[i].pieceColor == currentTurnColor){
 
-   mateDirection(squaresArray[i].row +1, squaresArray[i].col-1, 'up left',findSquare(squaresArray[i].row,squaresArray[i].col)) 
-    mateDirection(squaresArray[i].row +1, squaresArray[i].col + 1,'up right',findSquare(squaresArray[i].row,squaresArray[i].col)) 
-    mateDirection(squaresArray[i].row -1, squaresArray[i].col -1,'down left',findSquare(squaresArray[i].row,squaresArray[i].col)) 
-    mateDirection(squaresArray[i].row -1, squaresArray[i].col +1,'down right',findSquare(squaresArray[i].row,squaresArray[i].col)) 
+    movement(squaresArray[i].row, squaresArray[i].col,mateDirection,"bishop",findSquare(squaresArray[i].row,squaresArray[i].col));
+
     }
 
     if (squaresArray[i].pieceType == 'queen' && squaresArray[i].pieceColor == currentTurnColor){   
 
-    mateDirection(squaresArray[i].row +1, squaresArray[i].col-1, 'up left',findSquare(squaresArray[i].row,squaresArray[i].col)) 
-    mateDirection(squaresArray[i].row +1, squaresArray[i].col + 1,'up right',findSquare(squaresArray[i].row,squaresArray[i].col)) 
-    mateDirection(squaresArray[i].row -1, squaresArray[i].col -1,'down left',findSquare(squaresArray[i].row,squaresArray[i].col)) 
-    mateDirection(squaresArray[i].row -1, squaresArray[i].col +1,'down right',findSquare(squaresArray[i].row,squaresArray[i].col)) 
-        mateDirection(squaresArray[i].row + 1,squaresArray[i].col, 'up',findSquare(squaresArray[i].row,squaresArray[i].col)) 
-mateDirection(squaresArray[i].row - 1,squaresArray[i].col, 'down',findSquare(squaresArray[i].row,squaresArray[i].col)) 
-mateDirection(squaresArray[i].row , squaresArray[i].col + 1,'right',findSquare(squaresArray[i].row,squaresArray[i].col)) 
-mateDirection(squaresArray[i].row , squaresArray[i].col -1, 'left',findSquare(squaresArray[i].row,squaresArray[i].col)) 
+        movement(squaresArray[i].row, squaresArray[i].col,mateDirection,"rook",findSquare(squaresArray[i].row,squaresArray[i].col));
+        movement(squaresArray[i].row, squaresArray[i].col,mateDirection,"bishop",findSquare(squaresArray[i].row,squaresArray[i].col));
+
 
         }
 
-        /* for (let i = 0; i < wPawnArray.length; i++){
-            if (wPawnArray[i].pieceType == 'pawn' && wPawnArray[i].pieceColor == 'white' && currentTurnColor == 'white') {
-                matePawn(wPawnArray[i].row +2,wPawnArray[i].col ,true)
-            }
-           }
-           for (let i = 0; i < pawnArray.length; i++){
-            if (pawnArray[i].pieceType == 'pawn' && pawnArray[i].pieceColor == 'black' && currentTurnColor == 'black') {
-                matePawn(pawnArray[i].row -2,pawnArray[i].col ,true)
-            }
-           } 
-    */
-/*         if (squaresArray[i].pieceType == 'pawn'  && squaresArray[i].pieceColor == currentTurnColor && currentTurnColor == 'white'){
-            matePawn(squaresArray[i].row +1,squaresArray[i].col + 1,false)
-            matePawn(squaresArray[i].row +1, squaresArray[i].col -1 ,false)
-            matePawn(squaresArray[i].row +1,squaresArray[i].col ,true) 
-            }
-        if (squaresArray[i].pieceType == 'pawn' &&  squaresArray[i].pieceColor == currentTurnColor && currentTurnColor == 'black'){
-             matePawn(squaresArray[i].row - 1,squaresArray[i].col + 1,false)
-            matePawn(squaresArray[i].row -1, squaresArray[i].col -1 ,false)
-            matePawn(squaresArray[i].row -1, squaresArray[i].col  ,true) 
-       
-            } */
-       
-        if (squaresArray[i].pieceType == 'knight' && squaresArray[i].pieceColor == currentTurnColor){
 
-          mateDirection(squaresArray[i].row + 2, squaresArray[i].col + 1, 'stop',findSquare(squaresArray[i].row,squaresArray[i].col)) 
-            mateDirection(squaresArray[i].row+ 1, squaresArray[i].col + 2, 'stop',findSquare(squaresArray[i].row,squaresArray[i].col)) 
-            mateDirection(squaresArray[i].row - 1, squaresArray[i].col + 2, 'stop',findSquare(squaresArray[i].row,squaresArray[i].col)) 
-            mateDirection(squaresArray[i].row- 2, squaresArray[i].col + 1, 'stop',findSquare(squaresArray[i].row,squaresArray[i].col)) 
-            mateDirection(squaresArray[i].row - 2, squaresArray[i].col - 1, 'stop',findSquare(squaresArray[i].row,squaresArray[i].col)) 
-            mateDirection(squaresArray[i].row - 1, squaresArray[i].col - 2, 'stop',findSquare(squaresArray[i].row,squaresArray[i].col)) 
-            mateDirection(squaresArray[i].row+ 1, squaresArray[i].col - 2, 'stop',findSquare(squaresArray[i].row,squaresArray[i].col)) 
-            mateDirection(squaresArray[i].row + 2, squaresArray[i].col - 1, 'stop',findSquare(squaresArray[i].row,squaresArray[i].col)) 
+
+
+        if (squaresArray[i].pieceType == 'pawn' && squaresArray[i].pieceColor == "white"){
+
+            if (findSquare(squaresArray[i].row + 1, squaresArray[i].col).pieceType == ""){ 
+                mateDirection(squaresArray[i].row +1, squaresArray[i].col , 'stop',findSquare(squaresArray[i].row,squaresArray[i].col))  
+            }
+            if (squaresArray[i].row == 1 && findSquare(squaresArray[i].row + 2, squaresArray[i].col).pieceType == ""){ 
+                mateDirection(squaresArray[i].row +2, squaresArray[i].col , 'stop',findSquare(squaresArray[i].row,squaresArray[i].col))  
+            }
+             if (squaresArray[i].col != 0 && findSquare(squaresArray[i].row - 1, squaresArray[i].col -1).pieceColor == "black"){ 
+                mateDirection(squaresArray[i].row +1, squaresArray[i].col -1, 'stop',findSquare(squaresArray[i].row,squaresArray[i].col))  
+            } 
+            
+            if (squaresArray[i].col != 7 && findSquare(squaresArray[i].row - 1, squaresArray[i].col +1).pieceColor == "black"){ 
+                mateDirection(squaresArray[i].row + 1, squaresArray[i].col +1, 'stop',findSquare(squaresArray[i].row,squaresArray[i].col))  
+            } 
+        
+
+        }
+
+        if (squaresArray[i].pieceType == 'pawn' && squaresArray[i].pieceColor == "black"){
+
+            if (findSquare(squaresArray[i].row - 1, squaresArray[i].col).pieceType == ""){ 
+                mateDirection(squaresArray[i].row - 1, squaresArray[i].col , 'stop',findSquare(squaresArray[i].row,squaresArray[i].col))  
+            }
+            if (squaresArray[i].row == 6 && findSquare(squaresArray[i].row - 2, squaresArray[i].col).pieceType == ""){ 
+                mateDirection(squaresArray[i].row - 2, squaresArray[i].col , 'stop',findSquare(squaresArray[i].row,squaresArray[i].col))  
+            }
+             if (squaresArray[i].col != 0 && findSquare(squaresArray[i].row - 1, squaresArray[i].col -1).pieceColor == "white"){ 
+                mateDirection(squaresArray[i].row - 1, squaresArray[i].col -1, 'stop',findSquare(squaresArray[i].row,squaresArray[i].col))  
+            } 
+            
+            if (squaresArray[i].col != 7 && findSquare(squaresArray[i].row - 1, squaresArray[i].col +1).pieceColor == "white"){ 
+                mateDirection(squaresArray[i].row - 1, squaresArray[i].col +1, 'stop',findSquare(squaresArray[i].row,squaresArray[i].col))  
+            } 
+        
+
+        }
+
+        if (squaresArray[i].pieceType == 'knight' && squaresArray[i].pieceColor == currentTurnColor){
+            movement(squaresArray[i].row, squaresArray[i].col,mateDirection,"knight",findSquare(squaresArray[i].row,squaresArray[i].col));
+
+
             } 
         }
 
@@ -624,18 +575,25 @@ mateDirection(squaresArray[i].row , squaresArray[i].col -1, 'left',findSquare(sq
     }else {return 'Not CheckMate'}
 
     }
+
+
     
  function
 mateDirection(row, col, direction,startSquare){
+   
 
     //already found a way out of checkmate - no need to look further.
 if (false == checkMate) {return}
 
 
+
  if (findSquare(row,col) == undefined){
     return
  }
-
+/*  if ("pawnUp" == direction && findSquare(row+1,col).altPieceType != "" && currentTurnColor == "white")
+ {return}
+ if ("pawnUp" == direction && findSquare(row-1,col).altPieceType != "" && currentTurnColor == "black")
+ {return} */
 
  // ran into a piece of the same color
  if (findSquare(row,col).pieceColor == currentTurnColor  ){
@@ -654,7 +612,7 @@ if (false == checkMate) {return}
     startSquare.altPieceColor = '';
     startSquare.altPieceType = '';}
 
-
+    console.log("MATEDIRECTION")
     resetCount(); // This resets the count because previous iterations of this function would have altered the count and those interations dont exist anymore.
 
     findSquare(row,col).altPieceType = 'placeholder';
@@ -662,8 +620,8 @@ if (false == checkMate) {return}
     countChecker();
 
     //CheckMate is assumed true unless this is tripped. This simply means that we found a way out of checkmate. 
-    if (0 == findBlackKing().whiteCount && currentTurnColor == 'black'){checkMate = false;}
-    if (0 == findWhiteKing().blackCount && currentTurnColor == 'white'){checkMate = false;}
+    if (0 == findKing('black').whiteCount && currentTurnColor == 'black'){checkMate = false;}
+    if (0 == findKing('white').blackCount && currentTurnColor == 'white'){checkMate = false;}
     altSnapshot();
     return
    
@@ -675,7 +633,7 @@ if (false == checkMate) {return}
    
     altSnapshot();
 
-
+// Putting the starting square piece back
     if (startSquare != undefined){
         startSquare.altPieceColor = '';
         startSquare.altPieceType = '';}
@@ -689,44 +647,12 @@ if (false == checkMate) {return}
     countChecker();
 
     //CheckMate is assumed true unless this is tripped. This simply means that we found a way out of checkmate. 
-    if (0 == findBlackKing().whiteCount && currentTurnColor == 'black'){checkMate = false;}
-    if (0 == findWhiteKing().blackCount && currentTurnColor == 'white'){checkMate = false;}
+    if (0 == findKing('black').whiteCount && currentTurnColor == 'black'){checkMate = false;}
+    if (0 == findKing('white').blackCount && currentTurnColor == 'white'){checkMate = false;}
     
     altSnapshot();
 
-
-    if (direction == 'stop'){return}
-
-    if (direction == 'up'){
-    return mateDirection(row +1, col,'up')}
-
-     if (direction == 'down') {
-         return mateDirection(row - 1, col, 'down')
-     }
-
-     if (direction == 'right') {
-         return mateDirection(row, col + 1, 'right')
-     }
-
-     if (direction == 'left') {
-         return mateDirection(row, col - 1, 'left')
-     }
-
-     if (direction == 'up left') {
-         return mateDirection(row + 1, col - 1, 'up left')
-     }
-
-     if (direction == 'up right') {
-         return mateDirection(row + 1, col + 1, 'up right')
-     }
-
-     if (direction == 'down left') {
-         return mateDirection(row - 1, col - 1, 'down left')
-     }
-
-     if (direction == 'down right') {
-         return mateDirection(row - 1, col + 1, 'down right')
-     }
+    recursionCallbackForMovement(row,col,direction,mateDirection);
 
 
 }
@@ -749,35 +675,28 @@ return}
 }
 
 //
-//  This function uses the same basic algorithm of moving the pieces but its job is to mark the lines of sight of pieces. This is to detect for check and checkmate.
+//  This function uses the same basic algorithm of moving the pieces and the mate checker but its job is to mark the pieces lines of sight.
+//  This is to detect for check and checkmate.
 function
 countChecker(){
    
     for (let i = 0; i < squaresArray.length; i++){
 
         if (squaresArray[i].altPieceType == 'rook' && squaresArray[i].altPieceColor != currentTurnColor){
-countDirection(squaresArray[i].row + 1,squaresArray[i].col, 'up')
-countDirection(squaresArray[i].row -1, squaresArray[i].col,'down' )
-countDirection(squaresArray[i].row , squaresArray[i].col - 1,'left' )      
-countDirection(squaresArray[i].row , squaresArray[i].col + 1,'right' )          
+  
+movement(squaresArray[i].row, squaresArray[i].col,countDirection,"rook"); 
+
 }
 
 if (squaresArray[i].altPieceType == 'bishop' && squaresArray[i].altPieceColor != currentTurnColor){
-    countDirection(squaresArray[i].row + 1,squaresArray[i].col + 1,'up-right')
-    countDirection(squaresArray[i].row -1, squaresArray[i].col +1,'down-right' )
-    countDirection(squaresArray[i].row +1 , squaresArray[i].col - 1,'up-left' )      
-    countDirection(squaresArray[i].row -1 , squaresArray[i].col - 1,'down-left' )          
+
+    movement(squaresArray[i].row, squaresArray[i].col,countDirection,"bishop");
     }
 
     if (squaresArray[i].altPieceType == 'queen' && squaresArray[i].altPieceColor != currentTurnColor){
-        countDirection(squaresArray[i].row + 1,squaresArray[i].col + 1,'up-right')
-        countDirection(squaresArray[i].row -1, squaresArray[i].col +1,'down-right' )
-        countDirection(squaresArray[i].row +1 , squaresArray[i].col - 1,'up-left' )      
-        countDirection(squaresArray[i].row -1 , squaresArray[i].col - 1,'down-left' )          
-        countDirection(squaresArray[i].row + 1,squaresArray[i].col, 'up')
-        countDirection(squaresArray[i].row -1, squaresArray[i].col,'down' )
-        countDirection(squaresArray[i].row , squaresArray[i].col - 1,'left' )      
-        countDirection(squaresArray[i].row , squaresArray[i].col + 1,'right' )         
+        movement(squaresArray[i].row, squaresArray[i].col,countDirection,"bishop");
+        movement(squaresArray[i].row, squaresArray[i].col,countDirection,"rook"); 
+
         }
    
         if (squaresArray[i].altPieceType == 'pawn' && currentTurnColor == 'white' && squaresArray[i].altPieceColor != currentTurnColor){
@@ -791,32 +710,17 @@ if (squaresArray[i].altPieceType == 'bishop' && squaresArray[i].altPieceColor !=
             }
        
         if (squaresArray[i].altPieceType == 'knight' && squaresArray[i].altPieceColor != currentTurnColor){
-            countDirection(squaresArray[i].row + 2, squaresArray[i].col + 1,'stop')
-            countDirection(squaresArray[i].row+ 1, squaresArray[i].col + 2,'stop')
-            countDirection(squaresArray[i].row - 1, squaresArray[i].col + 2,'stop')
-            countDirection(squaresArray[i].row- 2, squaresArray[i].col + 1,'stop')
-            countDirection(squaresArray[i].row - 2, squaresArray[i].col - 1,'stop')
-            countDirection(squaresArray[i].row - 1, squaresArray[i].col - 2,'stop')
-            countDirection(squaresArray[i].row+ 1, squaresArray[i].col - 2,'stop')
-            countDirection(squaresArray[i].row + 2, squaresArray[i].col - 1,'stop')
+            movement(squaresArray[i].row, squaresArray[i].col,countDirection,"knight"); 
+  
             }
 
             if (squaresArray[i].altPieceType == 'king' && squaresArray[i].altPieceColor != currentTurnColor){
-                countDirection(squaresArray[i].row + 1, squaresArray[i].col ,'stop')
-                countDirection(squaresArray[i].row+ 1, squaresArray[i].col + 1,'stop')
-                countDirection(squaresArray[i].row , squaresArray[i].col + 1,'stop')
-                countDirection(squaresArray[i].row- 1, squaresArray[i].col + 1,'stop')
-                countDirection(squaresArray[i].row - 1, squaresArray[i].col ,'stop')
-                countDirection(squaresArray[i].row - 1, squaresArray[i].col - 1,'stop')
-                countDirection(squaresArray[i].row, squaresArray[i].col - 1,'stop')
-                countDirection(squaresArray[i].row + 1, squaresArray[i].col - 1,'stop')
+                movement(squaresArray[i].row, squaresArray[i].col,countDirection,"king"); 
+
+                movement(squaresArray[i].row, squaresArray[i].col,countDirection,"king"); 
                 }
         }
 }
-
-
-
-
 
 //
 //      Movement for marking the lines of sight
@@ -843,110 +747,104 @@ if (findSquare(row,col).altPieceType != '' && findSquare(row,col).altPieceType !
             findSquare(row,col).whiteCount++;
         }
        
-if (direction == 'stop'){return}
-
-if (direction == 'up'){
-return countDirection(row +1, col,'up')}
-
- if (direction == 'down') {
-     return countDirection(row - 1, col, 'down')
- }
-
- if (direction == 'right') {
-     return countDirection(row, col + 1, 'right')
- }
-
- if (direction == 'left') {
-     return countDirection(row, col - 1, 'left')
- }
-
- if (direction == 'up-left') {
-     return countDirection(row + 1, col - 1, 'up-left')
- }
-
- if (direction == 'up-right') {
-    return countDirection(row + 1, col + 1, 'up-right')
-}
-
- if (direction == 'down-left') {
-     return countDirection(row - 1, col - 1, 'down-left')
- }
-
- if (direction == 'down-right') {
-     return countDirection(row - 1, col + 1, 'down-right')
- }
+        recursionCallbackForMovement(row,col,direction,countDirection);
 }
 }
+
+
+
+
+
+
+
+
 
 
 function
-pieceChecker(clickedSquare, row, col,){
+pieceChecker(clickedSquare, row, col){
     
         if ('rook' == clickedSquare.pieceType && clickedSquare.pieceColor == currentTurnColor){
-pieceDirection(row + 1,col, 'up')
-pieceDirection(row -1, col,'down' )
-pieceDirection(row , col - 1,'left' )      
-pieceDirection(row , col + 1,'right' )          
+      
+ movement(row,col,pieceDirection,"rook")
+
 }
 
 if ('bishop' == clickedSquare.pieceType && clickedSquare.pieceColor == currentTurnColor){
-    pieceDirection(row + 1,col + 1,'up-right')
-    pieceDirection(row -1, col +1,'down-right' )
-    pieceDirection(row +1 , col - 1,'up-left' )      
-    pieceDirection(row -1 , col - 1,'down-left' )          
+    movement(row,col,pieceDirection,"bishop")   
     }
 
     if ('queen' == clickedSquare.pieceType &&  clickedSquare.pieceColor == currentTurnColor){
-        pieceDirection(row + 1,col + 1,'up-right')
-        pieceDirection(row -1, col +1,'down-right' )
-        pieceDirection(row +1 , col - 1,'up-left' )      
-        pieceDirection(row -1 , col - 1,'down-left' )          
-        pieceDirection(row + 1,col, 'up')
-        pieceDirection(row -1, col,'down' )
-        pieceDirection(row , col - 1,'left' )      
-        pieceDirection(row , col + 1,'right' )         
+        movement(row,col,pieceDirection,"bishop")   
+        movement(row,col,pieceDirection,"rook")
         }
    
-/*         if ('pawn' == clickedSquare.pieceType &&  clickedSquare.pieceColor == currentTurnColor){
-            pieceDirection(row - 1,col + 1,'stop')
-            pieceDirection(row -1, col -1 ,'stop')
+       if ('pawn' == clickedSquare.pieceType &&  clickedSquare.pieceColor == "black"){
+        let pawnArray = [ a7Square,b7Square,c7Square,d7Square,e7Square,f7Square,g7Square,h7Square]
+
+      
+       
+        let currentSquare = findSquare(row,col)
+    
+        if (currentSquare == b4Square || currentSquare ==c4Square || currentSquare ==d4Square || currentSquare ==e4Square
+            || currentSquare ==f4Square || currentSquare ==g4Square || currentSquare ==h4Square){bEnPassantLeft(row,col)}
+    
+            if (currentSquare == b4Square || currentSquare ==c4Square || currentSquare ==d4Square || currentSquare ==e4Square
+                || currentSquare ==f4Square || currentSquare ==g4Square || currentSquare ==a4Square){bEnPassantRight(row,col)}
+    
+        for (let i = 0; i < pawnArray.length; i++){
+    
+        if ( currentSquare == pawnArray[i]){
+            pawnUp(row-2,col,"pawnUp")
+            pawnUp(row-1,col,"pawnUp")
+        }
+    }
+    pieceDirection(row-1, col+1, "pawn");
+    pieceDirection(row-1, col-1, "pawn");
+   pieceDirection (row-1,col, "pawnUp");
             }
+ 
+
+        if ('pawn' == clickedSquare.pieceType &&  clickedSquare.pieceColor == "white"){
+            let wPawnArray = [ a2Square,b2Square,c2Square,d2Square,e2Square,f2Square,g2Square,h2Square]
+
    
-        if ('pawn' == clickedSquare.pieceType &&  clickedSquare.pieceColor == currentTurnColor){
-            pieceDirection(row +1,col + 1, 'stop')
-            pieceDirection(row +1, col -1, 'stop' )
-            } */
+            let currentSquare = findSquare(row,col);
+   
+           
+        
+           if (currentSquare == b5Square || currentSquare ==c5Square || currentSquare ==d5Square || currentSquare ==e5Square
+            || currentSquare ==f5Square || currentSquare ==g5Square || currentSquare ==h5Square){wEnPassantLeft(row,col)}
+         
+            if (currentSquare == b5Square || currentSquare ==c5Square || currentSquare ==d5Square || currentSquare ==e5Square
+                || currentSquare ==f5Square || currentSquare ==g5Square || currentSquare ==a5Square){wEnPassantRight(row,col)}
+               
+        
+            for (let i = 0; i < wPawnArray.length; i++){
+        
+            if (  currentSquare == wPawnArray[i]){
+                pawnUp(row+2,col,"pawnUp"); 
+                pawnUp(row+1,col,"pawnUp");
+            }
+            }
+            pieceDirection(row+1, col+1, "pawn");
+           pieceDirection(row+1, col-1, "pawn");
+            pieceDirection (row+1,col,"pawnUp");
+            }
        
         if ('knight' == clickedSquare.pieceType && clickedSquare.pieceColor == currentTurnColor){
-            pieceDirection(row + 2, col + 1,'stop')
-            pieceDirection(row+ 1, col + 2,'stop')
-            pieceDirection(row - 1, col + 2,'stop')
-            pieceDirection(row- 2, col + 1,'stop')
-            pieceDirection(row - 2, col - 1,'stop')
-            pieceDirection(row - 1, col - 2,'stop')
-            pieceDirection(row+ 1, col - 2,'stop')
-            pieceDirection(row + 2, col - 1,'stop')
+            movement(row,col,pieceDirection,"knight")
             }
 
             if ('king' == clickedSquare.pieceType && clickedSquare.pieceColor == currentTurnColor){
-                pieceDirection(row + 1, col ,'stop')
-                pieceDirection(row+ 1, col + 1,'stop')
-                pieceDirection(row , col + 1,'stop')
-                pieceDirection(row- 1, col + 1,'stop')
-                pieceDirection(row - 1, col ,'stop')
-                pieceDirection(row - 1, col - 1,'stop')
-                pieceDirection(row, col - 1,'stop')
-                pieceDirection(row + 1, col - 1,'stop')
+
+                movement(row,col,pieceDirection,"king")
                 }
 
-                if ('pawn' == clickedSquare.pieceType && 'white' == currentTurnColor){ return wPawn(row,col)}
-if ('pawn' == clickedSquare.pieceType && 'black' == currentTurnColor){ return bPawn(row,col)}
+
         }
 
 
-
-//f
-//      Movement of the rook down left
+//      Movement of the pieces
 //
 function
 pieceDirection(row, col,  direction){
@@ -958,67 +856,125 @@ pieceDirection(row, col,  direction){
     }
    
     if (findSquare(row,col).pieceColor != '' && findSquare(row,col).pieceColor != currentTurnColor){
-        findSquare(row,col).encounter = true;
         
-        visualizePossibilities()
-        return
-   
+        // Stops pawn from encountering upwards
+        if ("black" == currentTurnColor && direction == "pawnUp" && findSquare(row-1, col) != "") 
+        {return}
+        if ("white" == currentTurnColor && direction == "pawnUp" && findSquare(row+1, col) != "") 
+        {return}
+        findSquare(row,col).encounter = true;
+        return   
     }  else {
-       
-       
+        if (direction == "pawn"){return}
+        
+
     findSquare(row,col).possible = true ;
-    
+
+    recursionCallbackForMovement(row,col,direction,pieceDirection);
+
    
-    visualizePossibilities()
+}
+}
+
+
+
+function
+pawnUp(row, col){
+
+ let currentSquare = findSquare(row,col)
+   
+
+ if (currentSquare == undefined) {return}
+    else if ( currentSquare.pieceColor != '' ){
+        console.log(currentSquare)
+        return
+    }
+   
+     else {
+       
+       
+    currentSquare.possible = true ;
+    console.log(currentSquare);
+   
+
+    return
+   
+}
+}
+
+function
+pawnEncounter(row, col){
+
+ let currentSquare = findSquare(row,col)
+   
+
+ if (currentSquare == undefined) {return}
+   else if ( currentSquare.pieceColor == currentTurnColor || currentSquare == undefined){
+        console.log(currentSquare)
+     
+        return
+    }
+   
+    else if (currentSquare.pieceColor != '' && currentSquare.pieceColor != currentTurnColor){
+        currentSquare.encounter = true
+      
+        console.log(currentSquare)
+     
+        return
+}
+}
+
+
+
+
+
+function
+wEnPassantLeft(row,col){
  
-if (direction == 'stop'){return}
+    leftOfPawn = findSquare(row,col - 1)
+    leftStartingSquare = findSquare(row + 2,col - 1)
+    leftFindTradeSquare = findSquare(row+1,col - 1)
 
-if (direction == 'up'){
-return pieceDirection(row +1, col,'up')}
+    let wEnPassantArray = [ b5Square,c5Square,d5Square,e5Square,f5Square,g5Square,h5Square]
 
- if (direction == 'down') {
-     return pieceDirection(row - 1, col, 'down')
- }
+    for (let i = 0; i < wEnPassantArray.length; i++){
+        if (wEnPassantArray[i].pieceType == 'pawn' && wEnPassantArray[i].pieceColor == 'white'
+         && currentTurnColor == 'white' && leftOfPawn.pieceType == 'pawn'
+        && leftOfPawn.pieceColor == 'black' && lastObject[0] == leftStartingSquare){
+          console.log('enPassant')
+            leftTradeSquare = leftFindTradeSquare
+            leftTradeSquare.enPassant = true;
+           
+        }
 
- if (direction == 'right') {
-     return pieceDirection(row, col + 1, 'right')
- }
-
- if (direction == 'left') {
-     return pieceDirection(row, col - 1, 'left')
- }
-
- if (direction == 'up-left') {
-     return pieceDirection(row + 1, col - 1, 'up-left')
- }
-
- if (direction == 'up-right') {
-    return pieceDirection(row + 1, col + 1, 'up-right')
+    }
 }
 
- if (direction == 'down-left') {
-     return pieceDirection(row - 1, col - 1, 'down-left')
- }
+function
+wEnPassantRight(row,col){
+ 
+    rightOfPawn = findSquare(row,col + 1)
+    rightStartingSquare = findSquare(row + 2,col + 1)
+    rightFindTradeSquare = findSquare(row+1,col + 1)
 
- if (direction == 'down-right') {
-     return pieceDirection(row - 1, col + 1, 'down-right')
- }
-   
+    let wEnPassantArray = [ a5Square,b5Square,c5Square,d5Square,e5Square,f5Square,g5Square]
+
+    for (let i = 0; i < wEnPassantArray.length; i++){
+        if (wEnPassantArray[i].pieceType == 'pawn' && wEnPassantArray[i].pieceColor == 'white' 
+        && currentTurnColor == 'white' && rightOfPawn.pieceType == 'pawn'
+        && rightOfPawn.pieceColor == 'black' && lastObject[0] == rightStartingSquare){
+          console.log('enPassant');
+            rightTradeSquare = rightFindTradeSquare;
+           rightTradeSquare.enPassant = true;
+           
+        }
+
+    }
 }
-}
 
 
-var leftOfPawn;
-var leftStartingSquare;
-var leftFindTradeSquare;
-var leftTradeSquare;
-var rightOfPawn;
-var rightStartingSquare;
-var rightFindTradeSquare;
-var rightTradeSquare;
-var InitialDivSquare;
-var aboveOrBelowInitalSquare;
-var deparetureSquare;
+
+
 
 
 function
@@ -1031,10 +987,13 @@ bEnPassantLeft(row,col){
     let bEnPassantArray = [ b4Square,c4Square,d4Square,e4Square,f4Square,g4Square,h4Square]
 
     for (let i = 0; i < bEnPassantArray.length; i++){
-        if (bEnPassantArray[i].pieceType == 'pawn' && bEnPassantArray[i].pieceColor == 'black' && currentTurnColor == 'black' && leftOfPawn.pieceType == 'pawn'
+        if (bEnPassantArray[i].pieceType == 'pawn' && bEnPassantArray[i].pieceColor == 'black' 
+        && currentTurnColor == 'black' && leftOfPawn.pieceType == 'pawn'
         && leftOfPawn.pieceColor == 'white' && lastObject[0] == leftStartingSquare){
           console.log('enPassant')
-            leftTradeSquare = leftFindTradeSquare
+            leftTradeSquare = leftFindTradeSquare;
+            
+        leftTradeSquare.enPassant = true;
            
         }
 
@@ -1053,367 +1012,70 @@ bEnPassantRight(row,col){
     let bEnPassantArray = [ a4Square,b4Square,c4Square,d4Square,e4Square,f4Square,g4Square]
 
     for (let i = 0; i < bEnPassantArray.length; i++){
-        if (bEnPassantArray[i].pieceType == 'pawn' && bEnPassantArray[i].pieceColor == 'black' && currentTurnColor == 'black' && rightOfPawn.pieceType == 'pawn'
+        if (bEnPassantArray[i].pieceType == 'pawn' && bEnPassantArray[i].pieceColor == 'black' 
+        && currentTurnColor == 'black' && rightOfPawn.pieceType == 'pawn'
         && rightOfPawn.pieceColor == 'white' && lastObject[0] == rightStartingSquare){
           console.log('enPassant')
-            rightTradeSquare = rightFindTradeSquare
+            rightTradeSquare = rightFindTradeSquare;
+            rightTradeSquare.enPassant = true;
            
         }
 
     }
 }
 
+
+
 function
-bEnPassantLeftMove(row,col){
-   
-         InitialDivSquare = findSquare(row,col);
-        aboveOrBelowInitalSquare = findSquare(row+1,col);
-        deparetureSquare = findSquare(row+1,col+1)
+enPassantMove(row,col,color_direction)
+{   
+    switch (color_direction){
+        case "blackleft": 
+        {
+            InitialDivSquare = findSquare(row,col);
+            aboveOrBelowInitalSquare = findSquare(row+1,col);
+            departureSquare = findSquare(row+1,col-1);
+            break;
+        }
+        case "blackright":
+            {
+                InitialDivSquare = findSquare(row,col);
+                aboveOrBelowInitalSquare = findSquare(row+1,col);
+                departureSquare = findSquare(row+1,col+1);
+                break;
+            }
+            case "whiteleft" :
+                {
+                    InitialDivSquare = findSquare(row,col);
+                    aboveOrBelowInitalSquare = findSquare(row-1,col);
+                    departureSquare = findSquare(row-1,col+1);
+                    break;
+                }
+                case "whiteright" :
+                    {
+                        InitialDivSquare = findSquare(row,col);
+                        aboveOrBelowInitalSquare = findSquare(row-1,col);
+                        departureSquare = findSquare(row-1,col-1);
+                        break;
+                    }
+    }
+       
         InitialDivSquare.pieceType = 'pawn';
-        InitialDivSquare.pieceColor = 'black';
+        InitialDivSquare.pieceColor = currentTurnColor;
         aboveOrBelowInitalSquare.pieceType = '';
         aboveOrBelowInitalSquare.pieceColor = '';
-        deparetureSquare.pieceType = '';
-        deparetureSquare.pieceColor = '';
+        departureSquare.pieceType = '';
+        departureSquare.pieceColor = '';
         leftTradeSquare = ''; 
-
-   
- 
-
-
-}
-
-
-function
-bEnPassantRightMove(row,col){
-   
-         InitialDivSquare = findSquare(row,col);
-        aboveOrBelowInitalSquare = findSquare(row+1,col);
-        deparetureSquare = findSquare(row+1,col-1)
-        InitialDivSquare.pieceType = 'pawn';
-        InitialDivSquare.pieceColor = 'black';
-        aboveOrBelowInitalSquare.pieceType = '';
-        aboveOrBelowInitalSquare.pieceColor = '';
-        deparetureSquare.pieceType = '';
-        deparetureSquare.pieceColor = '';
         rightTradeSquare = ''; 
-
-
-
 }
 
-function
-wEnPassantLeft(row,col){
- 
-    leftOfPawn = findSquare(row,col - 1)
-    leftStartingSquare = findSquare(row + 2,col - 1)
-    leftFindTradeSquare = findSquare(row+1,col - 1)
-
-    let wEnPassantArray = [ b5Square,c5Square,d5Square,e5Square,f5Square,g5Square,h5Square]
-
-    for (let i = 0; i < wEnPassantArray.length; i++){
-        if (wEnPassantArray[i].pieceType == 'pawn' && wEnPassantArray[i].pieceColor == 'white' && currentTurnColor == 'white' && leftOfPawn.pieceType == 'pawn'
-        && leftOfPawn.pieceColor == 'black' && lastObject[0] == leftStartingSquare){
-          console.log('enPassant')
-            leftTradeSquare = leftFindTradeSquare
-           
-        }
-
-    }
-}
-
-function
-wEnPassantRight(row,col){
- 
-    rightOfPawn = findSquare(row,col + 1)
-    rightStartingSquare = findSquare(row + 2,col + 1)
-    rightFindTradeSquare = findSquare(row+1,col + 1)
-
-    let wEnPassantArray = [ a5Square,b5Square,c5Square,d5Square,e5Square,f5Square,g5Square]
-
-    for (let i = 0; i < wEnPassantArray.length; i++){
-        if (wEnPassantArray[i].pieceType == 'pawn' && wEnPassantArray[i].pieceColor == 'white' && currentTurnColor == 'white' && rightOfPawn.pieceType == 'pawn'
-        && rightOfPawn.pieceColor == 'black' && lastObject[0] == rightStartingSquare){
-          console.log('enPassant')
-            rightTradeSquare = rightFindTradeSquare
-           
-        }
-
-    }
-}
-
-
-
-function
-wEnPassantRightMove(row,col){
-   
-         InitialDivSquare = findSquare(row,col);
-        aboveOrBelowInitalSquare = findSquare(row-1,col);
-        deparetureSquare = findSquare(row-1,col-1)
-        InitialDivSquare.pieceType = 'pawn';
-        InitialDivSquare.pieceColor = 'white';
-        aboveOrBelowInitalSquare.pieceType = '';
-        aboveOrBelowInitalSquare.pieceColor = '';
-        deparetureSquare.pieceType = '';
-        deparetureSquare.pieceColor = '';
-        rightTradeSquare = ''; 
-
-
-}
-
-
-function
-wEnPassantLeftMove(row,col){
-   
-         InitialDivSquare = findSquare(row,col);
-        aboveOrBelowInitalSquare = findSquare(row-1,col);
-        deparetureSquare = findSquare(row-1,col+1)
-        InitialDivSquare.pieceType = 'pawn';
-        InitialDivSquare.pieceColor = 'white';
-        aboveOrBelowInitalSquare.pieceType = '';
-        aboveOrBelowInitalSquare.pieceColor = '';
-        deparetureSquare.pieceType = '';
-        deparetureSquare.pieceColor = '';
-        leftTradeSquare = ''; 
-   
-
-}
-let wPawnArray = [ a2Square,b2Square,c2Square,d2Square,e2Square,f2Square,g2Square,h2Square]
-//f
-//      Movement possibilties of the white pawn.  
-//
-function
-wPawn(row,col){
-
-   
-   
-    let currentSquare = findSquare(row,col)
-    let doubleJumpEncounterSquare = findSquare(row+1,col)
- 
-   
-
-   if (currentSquare == b5Square || currentSquare ==c5Square || currentSquare ==d5Square || currentSquare ==e5Square
-    || currentSquare ==f5Square || currentSquare ==g5Square || currentSquare ==h5Square){wEnPassantLeft(row,col)}
- 
-    if (currentSquare == b5Square || currentSquare ==c5Square || currentSquare ==d5Square || currentSquare ==e5Square
-        || currentSquare ==f5Square || currentSquare ==g5Square || currentSquare ==a5Square){wEnPassantRight(row,col)}
-   
-
-
-    for (let i = 0; i < wPawnArray.length; i++)
-
-    if (  currentSquare == wPawnArray[i] && doubleJumpEncounterSquare.pieceColor == ''){
-        wPawnUp(row+2,col)
-    }
-
-    wPawnUpRight(row+1, col+1)
-    wPawnUpLeft(row+1, col-1)
-    wPawnUp (row+1,col)
-
-
-//f
-//      Movement of the pawn up right
-//
-function
-wPawnUpRight(row, col){
-
- let currentSquare = findSquare(row,col)
-   
-
- if (currentSquare == undefined) {return}
-    else if ( currentSquare.pieceColor == currentTurnColor ){
-        console.log(currentSquare)
-        return
-    }
-   
-    else if (currentSquare.pieceColor != '' && currentSquare.pieceColor != currentTurnColor){
-        currentSquare.encounter = true
-        visualizePossibilities()
-        console.log(currentSquare)
-        return
-   
-    }
-}
-
-//f
-//      Movement of the wPawn up left
-//
-function
-wPawnUpLeft(row, col){
-
- let currentSquare = findSquare(row,col)
-   
-
- if (currentSquare == undefined) {return}
-   else if ( currentSquare.pieceColor == currentTurnColor || currentSquare == undefined){
-        console.log(currentSquare)
-     
-        return
-    }
-   
-    else if (currentSquare.pieceColor != '' && currentSquare.pieceColor != currentTurnColor){
-        currentSquare.encounter = true
-        visualizePossibilities()
-        console.log(currentSquare)
-     
-        return
-   
-   
- 
-   
-}
-}
-
-
-//f
-//      Movement of the pawn down left
-//
-function
-wPawnUp(row, col){
-
- let currentSquare = findSquare(row,col)
-   
-
- if (currentSquare == undefined) {return}
-    else if ( currentSquare.pieceColor != '' ){
-        console.log(currentSquare)
-        return
-    }
-   
-     else {
-       
-       
-    currentSquare.possible = true ;
-    console.log(currentSquare);
-   
-    visualizePossibilities()
-    return
-   
-}
-}
-
-}
-
-
-let pawnArray = [ a7Square,b7Square,c7Square,d7Square,e7Square,f7Square,g7Square,h7Square]
-
-//f
-//      Movement possibilties of the bPawn.  
-//
-function
-bPawn(row,col){
-
-    let doubleJumpEncounterSquare = findSquare(row-1,col)
-   
-    let currentSquare = findSquare(row,col)
-
-    if (currentSquare == b4Square || currentSquare ==c4Square || currentSquare ==d4Square || currentSquare ==e4Square
-        || currentSquare ==f4Square || currentSquare ==g4Square || currentSquare ==h4Square){bEnPassantLeft(row,col)}
-
-        if (currentSquare == b4Square || currentSquare ==c4Square || currentSquare ==d4Square || currentSquare ==e4Square
-            || currentSquare ==f4Square || currentSquare ==g4Square || currentSquare ==a4Square){bEnPassantRight(row,col)}
-
-    for (let i = 0; i < pawnArray.length; i++)
-
-    if ( currentSquare == pawnArray[i] && doubleJumpEncounterSquare.pieceColor == ''){
-        bPawnUp(row-2,col)
-    }
- 
-
-   
-
-
-
-    bPawnUpRight(row-1, col+1)
-    bPawnUpLeft(row-1, col-1)
-    bPawnUp (row-1,col)
-
-
-//f
-//      Movement of the bPawn up right
-//
-function
-bPawnUpRight(row, col){
-
- let currentSquare = findSquare(row,col)
-   
-
- if (currentSquare == undefined) {return}
-    else if ( currentSquare.pieceColor == currentTurnColor ){
-        console.log(currentSquare)
-        return
-    }
-   
-    else if (currentSquare.pieceColor != '' && currentSquare.pieceColor != currentTurnColor){
-        currentSquare.encounter = true
-        visualizePossibilities()
-        console.log(currentSquare)
-        return
-   
-    }
-}
-
-//f
-//      Movement of the bPawn up left
-//
-function
-bPawnUpLeft(row, col){
-
- let currentSquare = findSquare(row,col)
-   
-
- if (currentSquare == undefined) {return}
-   else if ( currentSquare.pieceColor == currentTurnColor || currentSquare == undefined){
-        console.log(currentSquare)
-     
-        return
-    }
-   
-    else if (currentSquare.pieceColor != '' && currentSquare.pieceColor != currentTurnColor){
-        currentSquare.encounter = true
-        visualizePossibilities()
-        console.log(currentSquare)
-     
-        return
-      
-}
-}
-
-
-//f
-//      Movement of the black pawn up
-//
-function
-bPawnUp(row, col){
-
- let currentSquare = findSquare(row,col)
-   
-
- if (currentSquare == undefined) {return}
-    else if ( currentSquare.pieceColor != '' ){
-        console.log(currentSquare)
-        return
-    }
-   
-     else {
-       
-       
-    currentSquare.possible = true ;
-    console.log(currentSquare);
-   
-    visualizePossibilities()
-    return
-   
-}
-}
-
-}
 
 
 function
 clickingNonPossibleSquare(){
     resetPossibleAndEncounter();
-    unvisualizePossibilities(); checkChecker();
+    isKingInCheck();
     possibilityState = false;
 }
 
@@ -1445,14 +1107,15 @@ for (let index = 0; index < divArray.length; index ++){
     divArray[index].addEventListener('click',() => {mainEventFunction(squaresArray[index])})
 }
 
+
 function
 mainEventFunction(currentSquare){
 
-    if (rightTradeSquare == currentSquare && currentTurnColor == 'black'){  bEnPassantRightMove(currentSquare.row,currentSquare.col); ; changeTurn();  return}
-    if (leftTradeSquare == currentSquare && currentTurnColor == 'black'){  bEnPassantLeftMove(currentSquare.row,currentSquare.col); changeTurn();  return}
+    if (rightTradeSquare == currentSquare && currentTurnColor == 'black'){  enPassantMove(currentSquare.row,currentSquare.col,"blackleft"); ; changeTurn();  return}
+    if (leftTradeSquare == currentSquare && currentTurnColor == 'black'){  enPassantMove(currentSquare.row,currentSquare.col,"blackright"); changeTurn();  return}
 
-    if (rightTradeSquare == currentSquare && currentTurnColor == 'white'){  wEnPassantRightMove(currentSquare.row,currentSquare.col);  changeTurn();  return}
-    if (leftTradeSquare == currentSquare && currentTurnColor == 'white'){  wEnPassantLeftMove(currentSquare.row,currentSquare.col);  changeTurn();  return}
+    if (rightTradeSquare == currentSquare && currentTurnColor == 'white'){  enPassantMove(currentSquare.row,currentSquare.col,"whiteright");  changeTurn();  return}
+    if (leftTradeSquare == currentSquare && currentTurnColor == 'white'){  enPassantMove(currentSquare.row,currentSquare.col,"whiteleft");  changeTurn();  return}
 
     if (true == possibilityState && false == currentSquare.possible && false == currentSquare.encounter) {
         clickingNonPossibleSquare()
@@ -1500,7 +1163,7 @@ mainEventFunction(currentSquare){
 
 //      Castling
 
-g1Div.addEventListener('click', () => {
+document.getElementById("g1-id").addEventListener('click', () => {
 
     if (currentObject == e1Square && false == wKingMoved && false == h1RookMoved && f1Square.pieceType == '' && g1Square.pieceType == ''
         && 0 == g1Square.blackCount && 0 == f1Square.blackCount&& 0 == e1Square.blackCount) {
@@ -1520,7 +1183,7 @@ g1Div.addEventListener('click', () => {
     }})
 
 
-    g8Div.addEventListener('click', () => {
+    document.getElementById("g8-id").addEventListener('click', () => {
 
         if (currentObject == e8Square && false == bKingMoved && false == h8RookMoved && f8Square.pieceType == '' && g8Square.pieceType == ''
             && 0 == g8Square.whiteCount && 0 == f8Square.whiteCount && 0 == e8Square.whiteCount) {
@@ -1539,18 +1202,15 @@ g1Div.addEventListener('click', () => {
             return
         }})
 
-        c1Div.addEventListener('click', () => {
+        document.getElementById("c1-id").addEventListener('click', () => {
 
             if (currentObject == e1Square && false == wKingMoved && false == a1RookMoved && b1Square.pieceType == '' && c1Square.pieceType == ''
                 && 0 == c1Square.blackCount && 0 == e1Square.blackCount && 0 == d1Square.blackCount && d1Square.pieceType == '') {
                 a1Square.pieceType = '';
-  
+                b1Square.pieceType = '';
                 a1Square.pieceColor = '';
-           
-                e1Square.pieceColor = '';
-                e1Square.pieceType = '';
-
-
+                b1Square.pieceColor = '';
+        
                d1Square.pieceType = 'rook';
                 d1Square.pieceColor = 'white';
                 c1Square.pieceType = 'king';
@@ -1565,14 +1225,14 @@ g1Div.addEventListener('click', () => {
 
 
 
-            c8Div.addEventListener('click', () => {
+            document.getElementById("c8-id").addEventListener('click', () => {
 
                 if (currentObject == e8Square  && false == bKingMoved && false == a8RookMoved && b8Square.pieceType == '' && c8Square.pieceType == ''
                     && 0 == c8Square.whiteCount && 0 == e8Square.whiteCount && 0 == d8Square.whiteCount && d8Square.pieceType == '') {
                     a8Square.pieceType = '';
-                    b8Square.pieceType = '';
+                    e8Square.pieceType = '';
                     a8Square.pieceColor = '';
-                    b8Square.pieceColor = '';
+                    e8Square.pieceColor = '';
             
                    d8Square.pieceType = 'rook';
                     d8Square.pieceColor = 'black';
