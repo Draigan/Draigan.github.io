@@ -14,6 +14,9 @@ button {
     font-weight: 700;
     box-shadow: 2px 2px #7a368f;
 }
+
+
+
 h1 {
     font-size: 25px;
     font-weight: 800;
@@ -49,3 +52,30 @@ td.chessboard:hover{
     background-color:rgb(255, 0, 200);
 }
 
+.possible {
+    
+    background-size: cover;
+    background: #d20967 !important;
+    
+}
+
+.encounter {
+    
+    background-size: cover;
+    background: #890040  !important;
+    
+}
+
+.enpassant {
+    
+    background-size: cover;
+    background: #890040  !important;
+    
+}
+
+.check {
+    
+    background-size: cover;
+    background: #4f0025  !important;
+    
+}
