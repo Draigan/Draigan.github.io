@@ -10,5 +10,7 @@ current features
 4. While in check, you can only move a piece that would block check.
 5. En passant.
 6. En passant out of check.
-7. Castle was implimented for whites kingside. I havn't gotten around to the others yet.
+7. Castling
+8. Checkmate
+
 
