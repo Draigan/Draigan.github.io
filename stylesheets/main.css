@@ -8598,4 +8598,8 @@ footer {
 
 @media only screen and (max-width: 450px) {
   .footer--phone-bubble {
-    margin-left: 1%; } }
+    margin-left: 1%; }
+  .main-hero {
+    display: none; }
+  .main-boxes {
+    margin-top: 1rem; } }
