@@ -1,0 +1,18 @@
+.my-submenu {
+  position: relative; }
+  .my-submenu a:hover {
+    color: white !important; }
+  .my-submenu li {
+    list-style: none; }
+
+.my-submenu--dropdown {
+  position: absolute;
+  left: -35px;
+  width: 9rem;
+  z-index: 999;
+  padding-left: 0;
+  margin-right: 50px;
+  border: 1px solid #63666A; }
+
+.my-submenu--icon {
+  display: inline; }
